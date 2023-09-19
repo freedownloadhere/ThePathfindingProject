@@ -1,5 +1,7 @@
 # The Pathfinding Project (Not functional yet!!)
 
+This is meant to be injected in MC Forge 1.8.9!
+
 The purpose of this project is to develop a Minecraft external cheat that can do all sorts of pathfinding.
 Currently the pathfinding code has not yet been copy-pasted from my other repo.
 
