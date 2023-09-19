@@ -1,4 +1,4 @@
-# The Pathfinding Project
+# The Pathfinding Project (Not functional yet!!)
 
 The purpose of this project is to develop a Minecraft external cheat that can do all sorts of pathfinding.
 
