@@ -1,11 +1,16 @@
 #include "Instance/Instance.h"
 #include <memory>
 
+using namespace std::literals::chrono_literals;
+
 void MainThread(HINSTANCE instance)
 {
 	std::unique_ptr<tpp::Instance> myInst = std::make_unique<tpp::Instance>();
 
 	myInst->run();
+
+	std::cout << "[!] Terminating in 3 seconds...\n";
+	std::this_thread::sleep_for(3s);
 
 	FreeLibrary(instance);
 }
