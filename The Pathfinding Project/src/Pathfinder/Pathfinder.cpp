@@ -73,7 +73,7 @@ bool Pathfinder::isWalkable(const AstarVector3& coordinates)
 		);
 }
 
-void Pathfinder::moveTo(const Vector3& target)
+void Pathfinder::moveTo(const Vector3& target, const std::string& blockToSet)
 {
 	Vector3 playerBlockBelow = this->minecraft->player->getBlockBelowPosition();
 
@@ -82,15 +82,16 @@ void Pathfinder::moveTo(const Vector3& target)
 		target
 	);
 
+	if(blockToSet != "none")
 	for (const auto& i : path)
 	{
 		this->minecraft->chat->sendMessageFromPlayer(
-			"/setblock " + std::to_string(i.x) + " " + std::to_string(i.y) + " " + std::to_string(i.z) + " glowstone"
+			"/setblock " + std::to_string(i.x) + " " + std::to_string(i.y) + " " + std::to_string(i.z) + " " + blockToSet
 		);
 		std::this_thread::sleep_for(10ms);
 	}
 
-	this->traversePath(path);
+	//this->traversePath(path);
 }
 
 std::list<Vector3> Pathfinder::makePath(const Vector3& start, const Vector3& target)
@@ -213,8 +214,6 @@ void Pathfinder::traversePath(const std::list<Vector3>& path)
 
 	while (iterator != walkMap.end() && !GetAsyncKeyState(VK_NUMPAD0))
 	{
-		Timer timer("walkMap iteration");
-
 		auto distance = Vector3::euclideanDistance(this->minecraft->player->getFootPosition(), iterator->first);
 
 		if (distance <= this->errorMargin)

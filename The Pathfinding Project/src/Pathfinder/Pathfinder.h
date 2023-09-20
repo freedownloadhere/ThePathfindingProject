@@ -19,7 +19,7 @@ namespace tpp
 	public:
 		Pathfinder(const std::shared_ptr<Minecraft>& minecraft);
 
-		void moveTo(const Vector3& target);
+		void moveTo(const Vector3& target, const std::string& blockToSet = "none");
 		std::list<Vector3> makePath(const Vector3& start, const Vector3& target);
 		void traversePath(const std::list<Vector3>& path);
 
