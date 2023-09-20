@@ -177,8 +177,11 @@
     <ClInclude Include="src\Minecraft\Player\Player.h" />
     <ClInclude Include="src\Minecraft\World\World.h" />
     <ClInclude Include="src\Pathfinder\Pathfinder.h" />
+    <ClInclude Include="src\Utils\Block\Block.h" />
     <ClInclude Include="src\Utils\EnumFacing.h" />
+    <ClInclude Include="src\Utils\Timer\Timer.h" />
     <ClInclude Include="src\Utils\Utils.h" />
+    <ClInclude Include="src\Vector3\AstarVector3\AstarVector3.h" />
     <ClInclude Include="src\Vector3\Vector3.h" />
     <ClInclude Include="src\ViewAngles\ViewAngles.h" />
   </ItemGroup>
@@ -189,7 +192,11 @@
     <ClCompile Include="src\Minecraft\Minecraft.cpp" />
     <ClCompile Include="src\Minecraft\Player\Player.cpp" />
     <ClCompile Include="src\Minecraft\World\World.cpp" />
+    <ClCompile Include="src\Pathfinder\Pathfinder.cpp" />
+    <ClCompile Include="src\Utils\Block\Block.cpp" />
+    <ClCompile Include="src\Utils\Timer\Timer.cpp" />
     <ClCompile Include="src\Utils\Utils.cpp" />
+    <ClCompile Include="src\Vector3\AstarVector3\AstarVector3.cpp" />
     <ClCompile Include="src\Vector3\Vector3.cpp" />
     <ClCompile Include="src\ViewAngles\ViewAngles.cpp" />
   </ItemGroup>

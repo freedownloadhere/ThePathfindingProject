@@ -8,7 +8,7 @@ Player::Player(
 	const jobject& mcClassInstance
 )
 {
-	this->m_init = this->initialize(
+	this->m_init = this->init(
 		env, mcClass, mcClassInstance
 	);
 
@@ -18,7 +18,7 @@ Player::Player(
 		std::cout << "[+] Successfully initialized Player\n";
 }
 
-bool Player::initialize(
+bool Player::init(
 	JNIEnv* env,
 	const jclass& mcClass,
 	const jobject& mcClassInstance

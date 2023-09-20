@@ -46,7 +46,7 @@ namespace tpp
 
 		bool m_init{ false };
 		JNIEnv* env{ nullptr };
-		bool initialize(
+		bool init(
 			JNIEnv* env,
 			const jclass& mcClass,
 			const jobject& mcClassInstance,

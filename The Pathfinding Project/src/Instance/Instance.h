@@ -15,7 +15,7 @@ namespace tpp
 	public:
 		Instance();
 		std::shared_ptr<Minecraft> minecraft{ nullptr };
-		//std::unique_ptr<Pathfinder> pathfinder{ nullptr };
+		std::unique_ptr<Pathfinder> pathfinder{ nullptr };
 
 		void run();
 

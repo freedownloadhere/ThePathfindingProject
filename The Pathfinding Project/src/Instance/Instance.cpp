@@ -20,8 +20,11 @@ Instance::Instance()
 bool Instance::init()
 {
 	this->minecraft = std::make_shared<Minecraft>();
-
 	if (this->minecraft == nullptr || !this->minecraft->isInit())
+		return false;
+
+	this->pathfinder = std::make_unique<Pathfinder>(this->minecraft);
+	if (this->pathfinder == nullptr || !this->pathfinder->isInit())
 		return false;
 
 	return true;

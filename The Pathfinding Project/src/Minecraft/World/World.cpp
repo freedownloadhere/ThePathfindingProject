@@ -8,7 +8,7 @@ World::World(
 	const jobject& mcClassInstance
 )
 {
-	this->m_init = this->initialize(
+	this->m_init = this->init(
 		env, mcClass, mcClassInstance
 	);
 
@@ -18,7 +18,7 @@ World::World(
 		std::cout << "[+] Successfully initialized World\n";
 }
 
-bool World::initialize(
+bool World::init(
 	JNIEnv* env,
 	const jclass& mcClass,
 	const jobject& mcClassInstance
