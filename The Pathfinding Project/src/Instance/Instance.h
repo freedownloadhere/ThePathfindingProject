@@ -7,7 +7,6 @@
 
 #include "../Minecraft/Minecraft.h"
 #include "../Pathfinder/Pathfinder.h"
-#include "../Utils/Command/Command.h"
 
 namespace tpp
 {
@@ -22,8 +21,6 @@ namespace tpp
 		bool isInit();
 
 	private:
-		void processInput();
-
 		bool mInit{ false };
 		bool init();
 	};

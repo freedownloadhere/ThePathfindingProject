@@ -37,21 +37,7 @@ bool Instance::init()
 	if (this->pathfinder == nullptr || !this->pathfinder->isInit())
 		return false;
 
-	Command::init(this->pathfinder);
-
 	return true;
-}
-
-void Instance::processInput()
-{
-	std::string lastMessage{ this->minecraft->chat->getLatestChatMessage() };
-	size_t commandStart{ lastMessage.find(".tpp")};
-
-	if (commandStart != std::string::npos)
-	{
-		this->minecraft->chat->sendMessageToPlayer("§7A command is being processed. ");
-		Command command(lastMessage.substr(commandStart));
-	}
 }
 
 bool Instance::isInit()
