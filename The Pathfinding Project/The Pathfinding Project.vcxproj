@@ -96,6 +96,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)The Pathfinding Project\dependencies\include;$(SolutionDir)The Pathfinding Project\dependencies\include\win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -117,6 +118,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)The Pathfinding Project\dependencies\include;$(SolutionDir)The Pathfinding Project\dependencies\include\win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -138,6 +140,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)The Pathfinding Project\dependencies\include;$(SolutionDir)The Pathfinding Project\dependencies\include\win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -159,6 +162,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)The Pathfinding Project\dependencies\include;$(SolutionDir)The Pathfinding Project\dependencies\include\win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -171,6 +175,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\CommandInterface\CommandInterface.h" />
     <ClInclude Include="src\Instance\Instance.h" />
     <ClInclude Include="src\Minecraft\Chat\Chat.h" />
     <ClInclude Include="src\Minecraft\Minecraft.h" />
@@ -187,6 +192,7 @@
     <ClInclude Include="src\ViewAngles\ViewAngles.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\CommandInterface\CommandInterface.cpp" />
     <ClCompile Include="src\dllmain.cpp" />
     <ClCompile Include="src\Instance\Instance.cpp" />
     <ClCompile Include="src\Minecraft\Chat\Chat.cpp" />

@@ -5,9 +5,9 @@ using namespace std::literals::chrono_literals;
 
 Pathfinder::Pathfinder(const std::shared_ptr<Minecraft>& minecraft)
 {
-	this->m_init = this->init(minecraft);
+	this->mInit = this->init(minecraft);
 
-	if (!this->m_init)
+	if (!this->mInit)
 		std::cout << "Failed to initialize Pathfinder class\n";
 }
 
@@ -44,7 +44,7 @@ bool Pathfinder::init(const std::shared_ptr<Minecraft>& minecraft)
 
 bool Pathfinder::isInit()
 {
-	return this->m_init;
+	return this->mInit;
 }
 
 bool Pathfinder::listContains(

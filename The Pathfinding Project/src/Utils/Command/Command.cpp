@@ -4,7 +4,7 @@ using namespace tpp;
 
 Command::Command(const std::string& command)
 {
-	if (Command::m_init)
+	if (Command::mInit)
 		this->tokenize(command);
 	else
 		std::cout << "[Command Failure] Could not tokenize command as the command object was not initialized\n";
@@ -73,5 +73,5 @@ void Command::tokenize(const std::string& command)
 void Command::init(const std::shared_ptr<Pathfinder>& pathfinder)
 {
 	Command::pathfinder = pathfinder;
-	Command::m_init = true;
+	Command::mInit = true;
 }

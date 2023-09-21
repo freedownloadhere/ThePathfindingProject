@@ -10,9 +10,9 @@ Chat::Chat(
 	const jobject& mcThePlayerInstance
 )
 {
-	this->m_init = this->init(env, mcClass, mcClassInstance, EntityPlayerSPClass, mcThePlayerInstance);
+	this->mInit = this->init(env, mcClass, mcClassInstance, EntityPlayerSPClass, mcThePlayerInstance);
 
-	if (!this->m_init)
+	if (!this->mInit)
 		std::cout << "	[-] An error occured while initializing Chat\n";
 	else
 		std::cout << "[+] Successfully initialized Chat\n";
@@ -160,7 +160,7 @@ bool Chat::init(
 
 bool Chat::isInit()
 {
-	return this->m_init;
+	return this->mInit;
 }
 
 void Chat::sendMessageToPlayer(const std::string& message)

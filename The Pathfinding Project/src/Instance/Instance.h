@@ -19,11 +19,12 @@ namespace tpp
 		std::shared_ptr<Pathfinder> pathfinder{ nullptr };
 
 		void run();
+		bool isInit();
 
 	private:
 		void processInput();
 
-		bool m_init{ false };
+		bool mInit{ false };
 		bool init();
 	};
 }

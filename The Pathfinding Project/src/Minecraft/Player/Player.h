@@ -79,7 +79,7 @@ namespace tpp
 
 		inline static INPUT leftClickInput[2], rightClickInput[2];
 
-		bool m_init{ false };
+		bool mInit{ false };
 		JNIEnv* env{ nullptr };
 		bool init(
 			JNIEnv* env,

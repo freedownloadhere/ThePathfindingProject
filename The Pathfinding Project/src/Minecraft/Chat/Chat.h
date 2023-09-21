@@ -44,7 +44,7 @@ namespace tpp
 			listGet{ nullptr },
 			getChatComp{ nullptr };
 
-		bool m_init{ false };
+		bool mInit{ false };
 		JNIEnv* env{ nullptr };
 		bool init(
 			JNIEnv* env,

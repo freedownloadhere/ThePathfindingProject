@@ -62,7 +62,7 @@ namespace tpp
 		bool listContains(const AstarVector3& element, const std::vector<AstarVector3>& heap);
 		bool isWalkable(const AstarVector3& coordinates);
 
-		bool m_init{ false };
+		bool mInit{ false };
 		bool init(const std::shared_ptr<Minecraft>& minecraft);
 	};
 }

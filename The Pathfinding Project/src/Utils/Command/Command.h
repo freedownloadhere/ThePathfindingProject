@@ -15,7 +15,7 @@ namespace tpp
 		static void init(const std::shared_ptr<Pathfinder>& pathfinder);
 	private:
 		inline static std::shared_ptr<Pathfinder> pathfinder{ nullptr };
-		inline static bool m_init{ false };
+		inline static bool mInit{ false };
 
 		void tokenize(const std::string& command);
 	};
