@@ -4,9 +4,9 @@ using namespace tpp;
 
 Minecraft::Minecraft()
 {
-	this->m_init = this->init();
+	this->mInit = this->init();
 
-	if (!this->m_init)
+	if (!this->mInit)
 		std::cout << "	[-] An error occured while initializing Minecraft\n";
 	else
 		std::cout << "[+] Successfully initialized Minecraft\n";
@@ -88,5 +88,5 @@ bool Minecraft::init()
 
 bool Minecraft::isInit()
 {
-	return this->m_init;
+	return this->mInit;
 }

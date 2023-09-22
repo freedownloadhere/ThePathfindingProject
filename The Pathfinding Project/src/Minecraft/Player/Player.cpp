@@ -8,11 +8,11 @@ Player::Player(
 	const jobject& mcClassInstance
 )
 {
-	this->m_init = this->init(
+	this->mInit = this->init(
 		env, mcClass, mcClassInstance
 	);
 
-	if (!this->m_init)
+	if (!this->mInit)
 		std::cout << "	[-] An error occured while initializing Player\n";
 	else
 		std::cout << "[+] Successfully initialized Player\n";
@@ -266,7 +266,7 @@ ViewAngles Player::getViewAngles()
 
 bool Player::isInit()
 {
-	return this->m_init;
+	return this->mInit;
 }
 
 void Player::updateMainInventory()
@@ -291,7 +291,7 @@ void Player::updateMainInventory()
 
 std::string Player::getItem(int index)
 {
-	if (!this->m_init)
+	if (!this->mInit)
 	{
 		std::cout << "The player object was not initialized properly\n";
 		return "";
@@ -305,7 +305,7 @@ std::string Player::getItem(int index)
 
 std::string Player::updateAndGetItem(int index)
 {
-	if (!this->m_init)
+	if (!this->mInit)
 	{
 		std::cout << "The player object was not initialized properly\n";
 		return "";

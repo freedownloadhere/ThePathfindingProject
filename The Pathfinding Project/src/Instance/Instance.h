@@ -7,7 +7,6 @@
 
 #include "../Minecraft/Minecraft.h"
 #include "../Pathfinder/Pathfinder.h"
-#include "../Utils/Command/Command.h"
 
 namespace tpp
 {
@@ -19,11 +18,10 @@ namespace tpp
 		std::shared_ptr<Pathfinder> pathfinder{ nullptr };
 
 		void run();
+		bool isInit();
 
 	private:
-		void processInput();
-
-		bool m_init{ false };
+		bool mInit{ false };
 		bool init();
 	};
 }

@@ -54,7 +54,7 @@
     <ClInclude Include="src\Utils\Block\Block.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Utils\Command\Command.h">
+    <ClInclude Include="src\CommandInterface\CommandInterface.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -98,7 +98,7 @@
     <ClCompile Include="src\Utils\Block\Block.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Utils\Command\Command.cpp">
+    <ClCompile Include="src\CommandInterface\CommandInterface.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

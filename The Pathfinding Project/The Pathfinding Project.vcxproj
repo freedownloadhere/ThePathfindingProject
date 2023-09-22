@@ -96,6 +96,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)The Pathfinding Project\dependencies\include;$(SolutionDir)The Pathfinding Project\dependencies\include\win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -117,6 +118,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)The Pathfinding Project\dependencies\include;$(SolutionDir)The Pathfinding Project\dependencies\include\win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -138,6 +140,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)The Pathfinding Project\dependencies\include;$(SolutionDir)The Pathfinding Project\dependencies\include\win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -159,6 +162,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)The Pathfinding Project\dependencies\include;$(SolutionDir)The Pathfinding Project\dependencies\include\win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -171,6 +175,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\CommandInterface\CommandInterface.h" />
     <ClInclude Include="src\Instance\Instance.h" />
     <ClInclude Include="src\Minecraft\Chat\Chat.h" />
     <ClInclude Include="src\Minecraft\Minecraft.h" />
@@ -178,7 +183,6 @@
     <ClInclude Include="src\Minecraft\World\World.h" />
     <ClInclude Include="src\Pathfinder\Pathfinder.h" />
     <ClInclude Include="src\Utils\Block\Block.h" />
-    <ClInclude Include="src\Utils\Command\Command.h" />
     <ClInclude Include="src\Utils\EnumFacing.h" />
     <ClInclude Include="src\Utils\Timer\Timer.h" />
     <ClInclude Include="src\Utils\Utils.h" />
@@ -187,6 +191,7 @@
     <ClInclude Include="src\ViewAngles\ViewAngles.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\CommandInterface\CommandInterface.cpp" />
     <ClCompile Include="src\dllmain.cpp" />
     <ClCompile Include="src\Instance\Instance.cpp" />
     <ClCompile Include="src\Minecraft\Chat\Chat.cpp" />
@@ -195,7 +200,6 @@
     <ClCompile Include="src\Minecraft\World\World.cpp" />
     <ClCompile Include="src\Pathfinder\Pathfinder.cpp" />
     <ClCompile Include="src\Utils\Block\Block.cpp" />
-    <ClCompile Include="src\Utils\Command\Command.cpp" />
     <ClCompile Include="src\Utils\Timer\Timer.cpp" />
     <ClCompile Include="src\Utils\Utils.cpp" />
     <ClCompile Include="src\Vector3\AstarVector3\AstarVector3.cpp" />

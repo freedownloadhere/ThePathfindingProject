@@ -8,11 +8,11 @@ World::World(
 	const jobject& mcClassInstance
 )
 {
-	this->m_init = this->init(
+	this->mInit = this->init(
 		env, mcClass, mcClassInstance
 	);
 
-	if (!this->m_init)
+	if (!this->mInit)
 		std::cout << "	[-] An error occured while initializing World\n";
 	else
 		std::cout << "[+] Successfully initialized World\n";
@@ -103,7 +103,7 @@ bool World::init(
 
 int World::getBlockID(const Vector3& pos)
 {
-	if (!this->m_init)
+	if (!this->mInit)
 	{
 		std::cout << "The world object was not initialized properly\n";
 		return -1;
@@ -143,5 +143,5 @@ int World::getBlockID(const Vector3& pos)
 
 bool World::isInit()
 {
-	return this->m_init;
+	return this->mInit;
 }

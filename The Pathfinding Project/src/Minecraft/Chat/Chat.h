@@ -18,8 +18,8 @@ namespace tpp
 			const jobject& mcThePlayerInstance
 		);
 
-		void sendMessageToPlayer(const std::string& message);
-		void sendMessageFromPlayer(const std::string& message);
+		bool sendMessageToPlayer(const std::string& message);
+		bool sendMessageFromPlayer(const std::string& message);
 		std::string getLatestChatMessage();
 		bool isInit();
 
@@ -44,7 +44,7 @@ namespace tpp
 			listGet{ nullptr },
 			getChatComp{ nullptr };
 
-		bool m_init{ false };
+		bool mInit{ false };
 		JNIEnv* env{ nullptr };
 		bool init(
 			JNIEnv* env,

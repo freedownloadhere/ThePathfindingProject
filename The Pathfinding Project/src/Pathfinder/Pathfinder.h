@@ -19,9 +19,8 @@ namespace tpp
 	public:
 		Pathfinder(const std::shared_ptr<Minecraft>& minecraft);
 
-		void moveTo(const Vector3& target, const std::string& blockToSet = "none");
-		std::list<Vector3> makePath(const Vector3& start, const Vector3& target);
-		void traversePath(const std::list<Vector3>& path);
+		bool goTo(const Vector3& target, const std::string& blockToSet = "none");
+		bool makePath(const Vector3& start, const Vector3& target, const std::string& blockToSet = "none");
 
 		bool isInit();
 
@@ -58,11 +57,14 @@ namespace tpp
 		std::mt19937 shuffler;
 		std::map<Vector3, bool> walkableBlockCache;
 
+		std::list<Vector3> defaultAstar(const Vector3& start, const Vector3& target);
+		void traversePath(const std::list<Vector3>& path);
+
 		std::vector<std::pair<Vector3, int>> makeWalkMap(const std::list<Vector3>& path);
 		bool listContains(const AstarVector3& element, const std::vector<AstarVector3>& heap);
 		bool isWalkable(const AstarVector3& coordinates);
 
-		bool m_init{ false };
+		bool mInit{ false };
 		bool init(const std::shared_ptr<Minecraft>& minecraft);
 	};
 }

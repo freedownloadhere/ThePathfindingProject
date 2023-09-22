@@ -33,7 +33,7 @@ namespace tpp
 		jobject
 			worldInstance{ nullptr };
 
-		bool m_init{ false };
+		bool mInit{ false };
 		JNIEnv* env{ nullptr };
 		bool init(
 			JNIEnv* env,

@@ -24,7 +24,7 @@ namespace tpp
 		jclass mcClass{ nullptr };
 		jobject mcClassInstance{ nullptr };
 
-		bool m_init{ false };
+		bool mInit{ false };
 		bool init();
 		JNIEnv* env{ nullptr };
 	};
