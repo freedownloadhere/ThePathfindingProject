@@ -30,6 +30,7 @@ void CommandInterface::enterLoop()
 		else if (this->mCmdName == "makepath") this->mCmdResult = this->cmdMakePath();
 		else if (this->mCmdName == "print") this->mCmdResult = this->cmdPrint();
 		else if (this->mCmdName == "send") this->mCmdResult = this->cmdSend();
+
 		else if (this->mCmdName == "end") return;
 
 		else
