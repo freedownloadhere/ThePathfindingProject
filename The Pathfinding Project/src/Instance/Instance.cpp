@@ -23,7 +23,6 @@ Instance::Instance()
 		std::cout << "Keep in mind this is still in its early stages and prone to bugs.\n";
 		std::cout << "Make sure to report any issues on the Github repo!\n\n";
 		std::cout << "[Command Interface] This is a test branch for a command interface implementation.\n\n";
-		std::cout << "[Exit] To exit without crashing, press Numpad key 0!\n";
 	}
 }
 

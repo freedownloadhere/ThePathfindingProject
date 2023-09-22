@@ -5,6 +5,13 @@ using namespace std::literals::chrono_literals;
 
 void MainThread(HINSTANCE hInstance)
 {
+	FILE* in{ nullptr }, *out{ nullptr };
+	AllocConsole();
+	SetConsoleOutputCP(CP_UTF8);
+
+	freopen_s(&in, "CONIN$", "r", stdin);
+	freopen_s(&out, "CONOUT$", "w", stdout);
+
 	std::shared_ptr<tpp::Instance> myInst = std::make_shared<tpp::Instance>();
 	tpp::CommandInterface myInterface(myInst);
 
@@ -13,27 +20,21 @@ void MainThread(HINSTANCE hInstance)
 	std::cout << "[!] Terminating in 3 seconds...\n";
 	std::this_thread::sleep_for(3s);
 
+	if (in) fclose(in);
+	if (out) fclose(out);
+
+	FreeConsole();
 	FreeLibrary(hInstance);
 }
 
-bool __stdcall DllMain(HINSTANCE instance, DWORD reason, LPVOID reserved)
+bool __stdcall DllMain(HINSTANCE hInstance, DWORD reason, LPVOID reserved)
 {
-	static FILE* file{ nullptr };
-	static std::thread mainThread{};
+	std::thread mainThread{};
 
 	if (reason == DLL_PROCESS_ATTACH)
 	{
-		AllocConsole();
-		//SetConsoleOutputCP(CP_UTF8);
-		freopen_s(&file, "CONOUT$", "w", stdout);
-
-		mainThread = std::thread(MainThread, instance);
+		mainThread = std::thread(MainThread, hInstance);
 		mainThread.detach();
-	}
-	else if (reason == DLL_PROCESS_DETACH)
-	{
-		fclose(file);
-		FreeConsole();
 	}
 
 	return 1;

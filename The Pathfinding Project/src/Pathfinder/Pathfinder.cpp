@@ -73,35 +73,74 @@ bool Pathfinder::isWalkable(const AstarVector3& coordinates)
 		);
 }
 
-void Pathfinder::moveTo(const Vector3& target, const std::string& blockToSet)
+bool Pathfinder::makePath(const Vector3& start, const Vector3& target, const std::string& blockToSet)
 {
-	Vector3 playerBlockBelow = this->minecraft->player->getBlockBelowPosition();
-
-	auto path = this->makePath(
-		playerBlockBelow,
-		target
-	);
-
-	if(blockToSet != "none")
-	for (const auto& i : path)
+	if (start.y < 0)
 	{
-		this->minecraft->chat->sendMessageFromPlayer(
-			"/setblock " + std::to_string(i.x) + " " + std::to_string(i.y) + " " + std::to_string(i.z) + " " + blockToSet
-		);
-		std::this_thread::sleep_for(10ms);
+		std::cout << "[makePath] Invalid start block " << start << "\n";
+		return false;
+	}
+
+	if (target.y < 0 || target.y > 255)
+	{
+		std::cout << "[makePath] Invalid target block " << target << "\n";
+		return false;
+	}
+
+	std::list<Vector3> path = this->defaultAstar(start, target);
+	if (path.empty())
+	{
+		std::cout << "[makePath] Failed to make a path to " << target << ".\n";
+		return false;
+	}
+
+	if (blockToSet != "none")
+	{
+		for (const auto& i : path)
+		{
+			this->minecraft->chat->sendMessageFromPlayer(
+				"/setblock " + std::to_string(i.x) + " " + std::to_string(i.y) + " " + std::to_string(i.z) + " " + blockToSet
+			);
+			std::this_thread::sleep_for(10ms);
+		}
 	}
 
 	//this->traversePath(path);
+
+	return true;
 }
 
-std::list<Vector3> Pathfinder::makePath(const Vector3& start, const Vector3& target)
+bool Pathfinder::goTo(const Vector3& target, const std::string& blockToSet)
 {
-	Timer timer("makePath");
+	if (target.y < 0 || target.y > 255)
+	{
+		std::cout << "[goTo] Invalid target block " << target << "\n";
+		return false;
+	}
 
+	Vector3 start = this->minecraft->player->getBlockBelowPosition();
+	while
+		(
+			start.y >= 0 &&
+			Block::nonSolid.contains(this->minecraft->world->getBlockID(start))
+			)
+		start.y--;
+
+	if (start.y < 0)
+	{
+		std::cout << "[goTo] Failed to find a block below the player to start the path from.\n";
+		return false;
+	}
+
+	return this->makePath(start, target, blockToSet);
+}
+
+std::list<Vector3> Pathfinder::defaultAstar(const Vector3& start, const Vector3& target)
+{
 	this->walkableBlockCache.clear();
 
 	std::vector<AstarVector3> heapToSearch;
-	heapToSearch.reserve(500); // Preallocation so that small pathfinding goes faster
+	heapToSearch.reserve(500);
 
 	std::set<Vector3> processed;
 	std::map<AstarVector3, AstarVector3> connections;
@@ -165,8 +204,6 @@ std::list<Vector3> Pathfinder::makePath(const Vector3& start, const Vector3& tar
 
 std::vector<std::pair<Vector3, int>> Pathfinder::makeWalkMap(const std::list<Vector3>& path)
 {
-	Timer timer("makeWalkMap");
-
 	std::list<Vector3>::const_iterator it1, it2;
 	it1 = it2 = path.begin();
 	it2++;

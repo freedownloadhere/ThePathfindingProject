@@ -163,7 +163,7 @@ bool Chat::isInit()
 	return this->mInit;
 }
 
-void Chat::sendMessageToPlayer(const std::string& message)
+bool Chat::sendMessageToPlayer(const std::string& message)
 {
 	jobject chatComp{ nullptr };
 	jstring text{ nullptr };
@@ -174,16 +174,18 @@ void Chat::sendMessageToPlayer(const std::string& message)
 	if (chatComp == nullptr)
 	{
 		std::cout << "Failed to create chat component object\n";
-		return;
+		return false;
 	}
 
 	this->env->CallVoidMethod(this->mcThePlayerInstance, this->addChatMessage, chatComp);
 
 	this->env->DeleteLocalRef(text);
 	this->env->DeleteLocalRef(chatComp);
+
+	return true;
 }
 
-void Chat::sendMessageFromPlayer(const std::string& message)
+bool Chat::sendMessageFromPlayer(const std::string& message)
 {
 	jstring text{ nullptr };
 
@@ -192,6 +194,8 @@ void Chat::sendMessageFromPlayer(const std::string& message)
 	this->env->CallVoidMethod(this->mcThePlayerInstance, this->sendChatMessage, text);
 
 	this->env->DeleteLocalRef(text);
+
+	return true;
 }
 
 std::string Chat::getLatestChatMessage()

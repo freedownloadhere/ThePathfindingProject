@@ -1,5 +1,8 @@
 #pragma once
 
+#include <string>
+#include <sstream>
+
 #include "../Instance/Instance.h"
 
 namespace tpp
@@ -10,9 +13,16 @@ namespace tpp
 		CommandInterface(const std::shared_ptr<Instance>& instance);
 
 		void enterLoop();
+
 	private:
 		std::shared_ptr<Instance> mInstance{ nullptr };
-		std::string mLastInput;
+		std::string mCmdName, mCmdArgs;
+		bool mCmdResult{ false };
+
+		bool cmdGoto();
+		bool cmdMakePath();
+		bool cmdPrint();
+		bool cmdSend();
 
 		bool mInit{ false };
 		bool init(const std::shared_ptr<Instance>& instance);
