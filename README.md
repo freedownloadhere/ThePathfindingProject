@@ -6,6 +6,8 @@
 
 🤔 The purpose of this project is to develop a Minecraft external cheat that can do all sorts of pathfinding.
 
+✔️ Trello roadmap: https://trello.com/b/ifrJZSCx/the-pathfinding-project
+
 # How to use
 
 ❗ When injecting, make sure you are in a world.
@@ -95,10 +97,3 @@ Ends the execution of the DLL.
 ```
 end
 ```
-
-# Goals:
-
-- 2D pathfinding ✔️
-- 3D pathfinding 👷‍♂️ (WIP)
-- Smart pathfinding (Be able to jump, go through gaps etc) 👷‍♂️ (WIP)
-- Create and traverse a path automatically 👷‍♂️ (WIP)
