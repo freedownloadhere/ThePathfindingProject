@@ -11,6 +11,7 @@
 #include "../Utils/Block/Block.h"
 #include "../Minecraft/Minecraft.h"
 #include "../Vector3/AstarVector3/AstarVector3.h"
+#include "../Utils/Flags/MakePathFlags.h"
 
 namespace tpp
 {
@@ -19,8 +20,8 @@ namespace tpp
 	public:
 		Pathfinder(const std::shared_ptr<Minecraft>& minecraft);
 
-		bool goTo(const Vector3& target, const std::string& blockToSet = "none");
-		bool makePath(const Vector3& start, const Vector3& target, const std::string& blockToSet = "none");
+		bool goTo(Vector3 target, int flags = 0, const std::string& blockToSet = "none");
+		bool makePath(Vector3 start, Vector3 target, int flags = 0, const std::string& blockToSet = "none");
 
 		bool isInit();
 

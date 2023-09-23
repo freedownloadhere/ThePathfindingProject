@@ -55,8 +55,10 @@ void CommandInterface::enterLoop()
 bool CommandInterface::cmdGoto()
 {
 	std::istringstream ss(this->mCmdArgs);
+	std::string buffer{ "" };
 
 	Vector3 coordinates{ tpp::nullvector };
+	int flags{ 0 };
 	std::string blockType{ "stone" };
 
 	if (!(ss >> coordinates.x))
@@ -77,18 +79,36 @@ bool CommandInterface::cmdGoto()
 		return false;
 	}
 
+	while (ss >> buffer)
+	{
+		if (buffer == "+setblock")
+		{
+			flags += (int)MakePathFlags::SETBLOCK;
+			ss >> blockType;
+		}
+		else if (buffer == "+safe")
+		{
+			flags += (int)MakePathFlags::SAFE;
+		}
+		else
+		{
+			std::cout << "[Command] Invalid goto flag\n";
+			return false;
+		}
+	}
+
 	ss >> blockType;
 
-	return this->mInstance->pathfinder->goTo(coordinates, blockType);
+	return this->mInstance->pathfinder->goTo(coordinates, flags, blockType);
 }
 
 bool CommandInterface::cmdMakePath()
 {
-	std::this_thread::sleep_for(5s);
-
 	std::istringstream ss(this->mCmdArgs);
+	std::string buffer{ "" };
 
 	Vector3 start{ tpp::nullvector }, end{ tpp::nullvector };
+	int flags{ 0 };
 	std::string blockType{ "stone" }, blockData{ "" };
 
 	if (!(ss >> start.x))
@@ -127,10 +147,25 @@ bool CommandInterface::cmdMakePath()
 		return false;
 	}
 
-	ss >> blockType >> blockData;
-	blockType += " " + blockData;
+	while (ss >> buffer)
+	{
+		if (buffer == "+setblock")
+		{
+			flags += (int)MakePathFlags::SETBLOCK;
+			ss >> blockType;
+		}
+		else if (buffer == "+safe")
+		{
+			flags += (int)MakePathFlags::SAFE;
+		}
+		else
+		{
+			std::cout << "[Command] Invalid makepath flag\n";
+			return false;
+		}
+	}
 
-	return this->mInstance->pathfinder->makePath(start, end, blockType);
+	return this->mInstance->pathfinder->makePath(start, end, flags, blockType);
 }
 
 bool CommandInterface::cmdPrint()

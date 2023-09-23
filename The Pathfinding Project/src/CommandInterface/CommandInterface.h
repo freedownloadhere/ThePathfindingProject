@@ -4,6 +4,7 @@
 #include <sstream>
 
 #include "../Instance/Instance.h"
+#include "../Utils/Flags/Flags.h"
 
 namespace tpp
 {

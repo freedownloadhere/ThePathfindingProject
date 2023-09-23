@@ -94,7 +94,7 @@ bool Pathfinder::isWalkable(const AstarVector3& coordinates)
 		);
 }
 
-bool Pathfinder::makePath(const Vector3& start, const Vector3& target, const std::string& blockToSet)
+bool Pathfinder::makePath(Vector3 start, Vector3 target, int flags, const std::string& blockToSet)
 {
 	if (start.y < 0)
 	{
@@ -102,9 +102,38 @@ bool Pathfinder::makePath(const Vector3& start, const Vector3& target, const std
 		return false;
 	}
 
-	if (target.y < 0 || target.y > 255)
+	if (target.y < 0)
 	{
 		std::cout << "[makePath] Invalid target block " << target << "\n";
+		return false;
+	}
+
+	if (flags & (int)MakePathFlags::SAFE)
+	{
+		while
+			(
+				start.y >= 0 &&
+				Block::nonSolid.contains(this->minecraft->world->getBlockID(start))
+				)
+			start.y--;
+
+		while
+			(
+				target.y >= 0 &&
+				Block::nonSolid.contains(this->minecraft->world->getBlockID(target))
+				)
+			target.y--;
+	}
+
+	if (start.y < 0)
+	{
+		std::cout << "[makePath] Could not find a valid (solid) start block!\n";
+		return false;
+	}
+
+	if (target.y < 0)
+	{
+		std::cout << "[makePath] Could not find a valid (solid) target block!\n";
 		return false;
 	}
 
@@ -115,7 +144,7 @@ bool Pathfinder::makePath(const Vector3& start, const Vector3& target, const std
 		return false;
 	}
 
-	if (blockToSet != "none")
+	if (flags & (int)MakePathFlags::SETBLOCK)
 	{
 		for (const auto& i : path)
 		{
@@ -131,29 +160,14 @@ bool Pathfinder::makePath(const Vector3& start, const Vector3& target, const std
 	return true;
 }
 
-bool Pathfinder::goTo(const Vector3& target, const std::string& blockToSet)
+bool Pathfinder::goTo(Vector3 target, int flags, const std::string& blockToSet)
 {
-	if (target.y < 0 || target.y > 255)
-	{
-		std::cout << "[goTo] Invalid target block " << target << "\n";
-		return false;
-	}
-
-	Vector3 start = this->minecraft->player->getBlockBelowPosition();
-	while
-		(
-			start.y >= 0 &&
-			Block::nonSolid.contains(this->minecraft->world->getBlockID(start))
-			)
-		start.y--;
-
-	if (start.y < 0)
-	{
-		std::cout << "[goTo] Failed to find a block below the player to start the path from.\n";
-		return false;
-	}
-
-	return this->makePath(start, target, blockToSet);
+	return this->makePath(
+		this->minecraft->player->getBlockBelowPosition(), 
+		target, 
+		flags, 
+		blockToSet
+	);
 }
 
 std::list<Vector3> Pathfinder::defaultAstar(const Vector3& start, const Vector3& target)

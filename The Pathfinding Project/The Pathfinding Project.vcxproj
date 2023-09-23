@@ -184,6 +184,8 @@
     <ClInclude Include="src\Pathfinder\Pathfinder.h" />
     <ClInclude Include="src\Utils\Block\Block.h" />
     <ClInclude Include="src\Utils\EnumFacing.h" />
+    <ClInclude Include="src\Utils\Flags\Flags.h" />
+    <ClInclude Include="src\Utils\Flags\MakePathFlags.h" />
     <ClInclude Include="src\Utils\Timer\Timer.h" />
     <ClInclude Include="src\Utils\Utils.h" />
     <ClInclude Include="src\Vector3\AstarVector3\AstarVector3.h" />
