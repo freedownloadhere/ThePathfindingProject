@@ -115,7 +115,7 @@ bool Pathfinder::makePath(const Vector3& start, const Vector3& target, const std
 		return false;
 	}
 
-	/*if (blockToSet != "none")
+	if (blockToSet != "none")
 	{
 		for (const auto& i : path)
 		{
@@ -124,7 +124,7 @@ bool Pathfinder::makePath(const Vector3& start, const Vector3& target, const std
 			);
 			std::this_thread::sleep_for(10ms);
 		}
-	}*/
+	}
 
 	//this->traversePath(path);
 

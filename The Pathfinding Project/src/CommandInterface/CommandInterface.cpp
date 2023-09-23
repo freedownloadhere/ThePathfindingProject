@@ -1,6 +1,7 @@
 #include "CommandInterface.h"
 
 using namespace tpp;
+using namespace std::literals::chrono_literals;
 
 CommandInterface::CommandInterface(const std::shared_ptr<Instance>& instance)
 {
@@ -26,10 +27,13 @@ void CommandInterface::enterLoop()
 		std::cin >> this->mCmdName;
 		std::getline(std::cin, this->mCmdArgs);
 
+		this->mCmdArgs.erase(this->mCmdArgs.begin()); // Delete the one whitespace... lol
+
 		if (this->mCmdName == "goto") this->mCmdResult = this->cmdGoto();
 		else if (this->mCmdName == "makepath") this->mCmdResult = this->cmdMakePath();
 		else if (this->mCmdName == "print") this->mCmdResult = this->cmdPrint();
 		else if (this->mCmdName == "send") this->mCmdResult = this->cmdSend();
+		else if (this->mCmdName == "wait") this->mCmdResult = this->cmdWait();
 
 		else if (this->mCmdName == "end") return;
 
@@ -78,10 +82,12 @@ bool CommandInterface::cmdGoto()
 
 bool CommandInterface::cmdMakePath()
 {
+	std::this_thread::sleep_for(5s);
+
 	std::istringstream ss(this->mCmdArgs);
 
 	Vector3 start{ tpp::nullvector }, end{ tpp::nullvector };
-	std::string blockType{ "stone" };
+	std::string blockType{ "stone" }, blockData{ "" };
 
 	if (!(ss >> start.x))
 	{
@@ -119,7 +125,8 @@ bool CommandInterface::cmdMakePath()
 		return false;
 	}
 
-	ss >> blockType;
+	ss >> blockType >> blockData;
+	blockType += " " + blockData;
 
 	return this->mInstance->pathfinder->makePath(start, end, blockType);
 }
@@ -132,4 +139,24 @@ bool CommandInterface::cmdPrint()
 bool CommandInterface::cmdSend()
 {
 	return this->mInstance->minecraft->chat->sendMessageFromPlayer(this->mCmdArgs);
+}
+
+bool CommandInterface::cmdWait()
+{
+	int waitFor{ 0 };
+
+	try
+	{
+		waitFor = std::stoi(this->mCmdArgs);
+	}
+	catch (...)
+	{
+		std::cout << "[Command] wait::waitFor parameter is invalid\n";
+		return false;
+	}
+
+	std::cout << "[Command] Waiting for " << waitFor << " ms...\n";
+	std::this_thread::sleep_for(std::chrono::milliseconds(waitFor));
+
+	return true;
 }
