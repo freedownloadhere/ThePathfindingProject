@@ -137,6 +137,9 @@ bool Pathfinder::makePath(Vector3 start, Vector3 target, int flags, const std::s
 		return false;
 	}
 
+	if (!(flags & (int)MakePathFlags::USEPREVCACHE))
+		this->walkableBlockCache.clear();
+
 	std::list<Vector3> path = this->defaultAstar(start, target);
 	if (path.empty())
 	{
@@ -172,7 +175,6 @@ bool Pathfinder::goTo(Vector3 target, int flags, const std::string& blockToSet)
 
 std::list<Vector3> Pathfinder::defaultAstar(const Vector3& start, const Vector3& target)
 {
-	this->walkableBlockCache.clear();
 
 	std::vector<AstarVector3> heapToSearch;
 	heapToSearch.reserve(500);

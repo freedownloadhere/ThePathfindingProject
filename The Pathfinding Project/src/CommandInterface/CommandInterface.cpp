@@ -90,6 +90,10 @@ bool CommandInterface::cmdGoto()
 		{
 			flags += (int)MakePathFlags::SAFE;
 		}
+		else if (buffer == "+useprevcache")
+		{
+			flags += (int)MakePathFlags::USEPREVCACHE;
+		}
 		else
 		{
 			std::cout << "[Command] Invalid goto flag\n";
@@ -157,6 +161,10 @@ bool CommandInterface::cmdMakePath()
 		else if (buffer == "+safe")
 		{
 			flags += (int)MakePathFlags::SAFE;
+		}
+		else if (buffer == "+useprevcache")
+		{
+			flags += (int)MakePathFlags::USEPREVCACHE;
 		}
 		else
 		{
