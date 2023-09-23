@@ -35,6 +35,7 @@ void CommandInterface::enterLoop()
 		else if (this->mCmdName == "send") this->mCmdResult = this->cmdSend();
 		else if (this->mCmdName == "wait") this->mCmdResult = this->cmdWait();
 		else if (this->mCmdName == "echo") this->mCmdResult = this->cmdEcho();
+		else if (this->mCmdName == "cout") this->mCmdResult = this->cmdCout();
 
 		else if (this->mCmdName == "end") return;
 
@@ -177,4 +178,10 @@ bool CommandInterface::cmdEcho()
 
 	std::cout << "[Command] echo parameter is invalid. Valid parameters: on, off\n";
 	return false;
+}
+
+bool CommandInterface::cmdCout()
+{
+	std::cout << this->mCmdArgs << '\n';
+	return true;
 }
