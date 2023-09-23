@@ -30,16 +30,27 @@ The target must be a solid block.
 Does not check for invalid block names!
 
 ```
-goto x y z blockName
+goto x y z (flags)
 
 x, y, z = coordinates to pathfind to
-(optional) blockName = the internal name (default is stone) of the block to make the path out of
+```
+
+Flags:
+```
++safe
+Attempts to fix any problems regarding the start & target's Y level.
+Use if pathfinding is failing.
+
++setblock blockName
+Will make the path out of the block specified in blockName.
 ```
 
 Example:
 ```
-goto 12 65 -33 redstone_block  // Will make a path out of redstone blocks
-goto 0 55 103                  // Will make a stone path
+goto 12 65 -33 +safe +setblock redstone_block
+  // With safety flag
+goto 104 35 90 +setblock stone
+  // Without safety flag
 ```
 
 ## 2. makepath
@@ -51,15 +62,25 @@ Both locations must be solid blocks.
 Does not check for invalid block names!
 
 ```
-makepath x1 y1 z1 x2 y2 z2 blockName
+makepath x1 y1 z1 x2 y2 z2 (flags)
 x1, y1, z1 = coordinates of the starting location
 x2, y2, z2 = coordinates of the target location
-(optional) blockName = the internal name (default is stone) of the block to make the path out of
+```
+
+Flags:
+```
++safe
+Attempts to fix any problems regarding the start & target's Y level.
+Use if pathfinding is failing.
+
++setblock blockName
+Will make the path out of the block specified in blockName.
 ```
 
 Example:
 ```
-makepath -10 3 20 50 12 45  // Will make a path from (-10, 3, 20) to (50, 12, 45) out of stone
+makepath -10 3 20 50 12 45  +safe +setblock stone
+  // Will make a path from (-10, 3, 20) to (50, 12, 45) out of stone
 ```
 
 ## 3. print
@@ -73,7 +94,8 @@ print message
 
 Example:
 ```
-print hey mom  // Will show the message "hey mom" in your chat
+print hey mom
+  // Will show the message "hey mom" in your chat
 ```
 
 ## 4. send
@@ -87,7 +109,8 @@ send message
 
 Example:
 ```
-send Hi guys!  // Will send "Hi guys!" in chat.
+send Hi guys!
+  // Will send "Hi guys!" in chat.
 ```
 
 ## 5. end
