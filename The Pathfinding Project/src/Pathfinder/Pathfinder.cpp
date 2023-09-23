@@ -3,6 +3,27 @@
 using namespace tpp;
 using namespace std::literals::chrono_literals;
 
+namespace std
+{
+	template<>
+	struct hash<Vector3>
+	{
+		size_t operator()(const Vector3& key) const
+		{
+			return std::hash<double>()(key.x - key.y + key.z);
+		}
+	};
+
+	template<>
+	struct hash<AstarVector3>
+	{
+		size_t operator()(const AstarVector3& key) const
+		{
+			return std::hash<double>()(key.x - key.y + key.z - key.F + key.H);
+		}
+	};
+}
+
 Pathfinder::Pathfinder(const std::shared_ptr<Minecraft>& minecraft)
 {
 	this->mInit = this->init(minecraft);
@@ -94,7 +115,7 @@ bool Pathfinder::makePath(const Vector3& start, const Vector3& target, const std
 		return false;
 	}
 
-	if (blockToSet != "none")
+	/*if (blockToSet != "none")
 	{
 		for (const auto& i : path)
 		{
@@ -103,7 +124,7 @@ bool Pathfinder::makePath(const Vector3& start, const Vector3& target, const std
 			);
 			std::this_thread::sleep_for(10ms);
 		}
-	}
+	}*/
 
 	//this->traversePath(path);
 
@@ -142,8 +163,8 @@ std::list<Vector3> Pathfinder::defaultAstar(const Vector3& start, const Vector3&
 	std::vector<AstarVector3> heapToSearch;
 	heapToSearch.reserve(500);
 
-	std::set<Vector3> processed;
-	std::map<AstarVector3, AstarVector3> connections;
+	std::unordered_set<Vector3> processed;
+	std::unordered_map<AstarVector3, AstarVector3> connections;
 
 	AstarVector3 current{ start };
 	current.setG(0);

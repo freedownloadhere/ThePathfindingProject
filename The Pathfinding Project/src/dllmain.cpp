@@ -12,10 +12,12 @@ void MainThread(HINSTANCE hInstance)
 	freopen_s(&in, "CONIN$", "r", stdin);
 	freopen_s(&out, "CONOUT$", "w", stdout);
 
+
 	std::shared_ptr<tpp::Instance> myInst = std::make_shared<tpp::Instance>();
 	tpp::CommandInterface myInterface(myInst);
 
 	myInterface.enterLoop();
+
 
 	std::cout << "[!] Terminating in 3 seconds...\n";
 	std::this_thread::sleep_for(3s);
