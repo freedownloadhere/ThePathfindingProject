@@ -24,8 +24,9 @@ namespace tpp
 		bool cmdPrint();
 		bool cmdSend();
 		bool cmdWait();
+		bool cmdEcho();
 
-		bool mInit{ false };
+		bool mEcho{ true }, mInit{ false };
 		bool init(const std::shared_ptr<Instance>& instance);
 	};
 }

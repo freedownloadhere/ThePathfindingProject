@@ -34,6 +34,7 @@ void CommandInterface::enterLoop()
 		else if (this->mCmdName == "print") this->mCmdResult = this->cmdPrint();
 		else if (this->mCmdName == "send") this->mCmdResult = this->cmdSend();
 		else if (this->mCmdName == "wait") this->mCmdResult = this->cmdWait();
+		else if (this->mCmdName == "echo") this->mCmdResult = this->cmdEcho();
 
 		else if (this->mCmdName == "end") return;
 
@@ -44,9 +45,9 @@ void CommandInterface::enterLoop()
 		}
 
 		if (this->mCmdResult == true)
-			std::cout << "[Command] Executed " << this->mCmdName << " successfully.\n";
+			if(this->mEcho) std::cout << "[Command] Executed " << this->mCmdName << " successfully.\n";
 		else
-			std::cout << "[Command] Failed to execute " << this->mCmdName << ".\n";
+			if(this->mEcho) std::cout << "[Command] Failed to execute " << this->mCmdName << ".\n";
 	}
 }
 
@@ -155,8 +156,25 @@ bool CommandInterface::cmdWait()
 		return false;
 	}
 
-	std::cout << "[Command] Waiting for " << waitFor << " ms...\n";
+	if(this->mEcho) std::cout << "[Command] Waiting for " << waitFor << " ms...\n";
 	std::this_thread::sleep_for(std::chrono::milliseconds(waitFor));
 
 	return true;
+}
+
+bool CommandInterface::cmdEcho()
+{
+	if (this->mCmdArgs == "off")
+	{
+		this->mEcho = false;
+		return true;
+	}
+	else if (this->mCmdArgs == "on")
+	{
+		this->mEcho = true;
+		return true;
+	}
+
+	std::cout << "[Command] echo parameter is invalid. Valid parameters: on, off\n";
+	return false;
 }
