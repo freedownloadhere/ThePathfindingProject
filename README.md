@@ -43,6 +43,10 @@ Use if pathfinding is failing.
 
 +setblock blockName
 Will make the path out of the block specified in blockName.
+
++useprevcache
+Will not erase the block cache that was created in the last pathfinding iteration.
+Use this when blocks don't change, or remain solid.
 ```
 
 Example:
@@ -75,6 +79,10 @@ Use if pathfinding is failing.
 
 +setblock blockName
 Will make the path out of the block specified in blockName.
+
++useprevcache
+Will not erase the block cache that was created in the last pathfinding iteration.
+Use this when blocks don't change, or remain solid.
 ```
 
 Example:
