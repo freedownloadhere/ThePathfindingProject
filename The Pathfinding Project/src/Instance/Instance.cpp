@@ -5,24 +5,25 @@ using namespace std::literals::chrono_literals;
 
 Instance::Instance()
 {
-	std::cout << "=================================================== (Start of initialization)\n";
+	std::cout << "================ (Start of initialization) ================\n\n";
 
 	this->mInit = this->init();
 
-	std::cout << "=================================================== (Client status)\n";
+	std::cout << "\n===================== (Client status) =====================\n\n";
+
 	if (!this->mInit)
 		std::cout << "[-] Status: not initialized\n";
 	else
 		std::cout << "[+] Status: initialized\n";
-	std::cout << "=================================================== (End of initialization)\n\n";
+	std::cout << "\n================= (End of initialization) =================\n\n";
 
 	if (this->mInit)
 	{
 		std::cout << "[Welcome] Welcome to The Pathfinding Project!\n";
 		std::cout << "This project is made by FreeDownloadHere, with passion and love :)\n";
 		std::cout << "Keep in mind this is still in its early stages and prone to bugs.\n";
-		std::cout << "Make sure to report any issues on the Github repo!\n\n";
-		std::cout << "[Command Interface] This is a test branch for a command interface implementation.\n\n";
+		std::cout << "Make sure to report any issues on the Github repo!\n";
+		std::cout << "\n===================== (Command input) =====================\n\n";
 	}
 }
 

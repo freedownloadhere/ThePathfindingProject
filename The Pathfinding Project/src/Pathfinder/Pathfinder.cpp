@@ -158,7 +158,10 @@ bool Pathfinder::makePath(Vector3 start, Vector3 target, int flags, const std::s
 		}
 	}
 
-	//this->traversePath(path);
+	if (flags & (int)MakePathFlags::TRAVERSE)
+	{
+		this->traversePath(path);
+	}
 
 	return true;
 }
@@ -175,7 +178,6 @@ bool Pathfinder::goTo(Vector3 target, int flags, const std::string& blockToSet)
 
 std::list<Vector3> Pathfinder::defaultAstar(const Vector3& start, const Vector3& target)
 {
-
 	std::vector<AstarVector3> heapToSearch;
 	heapToSearch.reserve(500);
 

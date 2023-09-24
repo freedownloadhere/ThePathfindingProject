@@ -7,6 +7,7 @@ namespace tpp
 		NONE = 0,
 		SETBLOCK = 1,
 		SAFE = 2,
-		USEPREVCACHE = 4
+		USEPREVCACHE = 4,
+		TRAVERSE = 8
 	};
 }
