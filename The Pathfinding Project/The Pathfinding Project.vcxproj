@@ -177,6 +177,7 @@
   <ItemGroup>
     <ClInclude Include="src\CommandInterface\CommandInterface.h" />
     <ClInclude Include="src\Instance\Instance.h" />
+    <ClInclude Include="src\JNI\JNI.h" />
     <ClInclude Include="src\Minecraft\Chat\Chat.h" />
     <ClInclude Include="src\Minecraft\Minecraft.h" />
     <ClInclude Include="src\Minecraft\Player\Player.h" />
@@ -196,6 +197,7 @@
     <ClCompile Include="src\CommandInterface\CommandInterface.cpp" />
     <ClCompile Include="src\dllmain.cpp" />
     <ClCompile Include="src\Instance\Instance.cpp" />
+    <ClCompile Include="src\JNI\JNI.cpp" />
     <ClCompile Include="src\Minecraft\Chat\Chat.cpp" />
     <ClCompile Include="src\Minecraft\Minecraft.cpp" />
     <ClCompile Include="src\Minecraft\Player\Player.cpp" />

@@ -63,6 +63,9 @@
     <ClInclude Include="src\Utils\Flags\MakePathFlags.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\JNI\JNI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\dllmain.cpp">
@@ -105,6 +108,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\CommandInterface\CommandInterface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\JNI\JNI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

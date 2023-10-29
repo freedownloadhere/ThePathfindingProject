@@ -2,154 +2,136 @@
 
 using namespace tpp;
 
-Chat::Chat(
-	JNIEnv* env,
+bool tpp::chat::initialize(
 	const jclass& mcClass,
 	const jobject& mcClassInstance,
 	const jclass& EntityPlayerSPClass,
 	const jobject& mcThePlayerInstance
 )
 {
-	this->mInit = this->init(env, mcClass, mcClassInstance, EntityPlayerSPClass, mcThePlayerInstance);
+	tpp::chat::mcThePlayerInstance = mcThePlayerInstance;
 
-	if (!this->mInit)
-		std::cout << "	[-] An error occured while initializing Chat\n";
-	else
-		std::cout << "[+] Successfully initialized Chat\n";
-}
-
-bool Chat::init(
-	JNIEnv* env,
-	const jclass& mcClass,
-	const jobject& mcClassInstance,
-	const jclass& EntityPlayerSPClass,
-	const jobject& mcThePlayerInstance
-)
-{
-	this->env = env;
-	this->mcThePlayerInstance = mcThePlayerInstance;
-
-	this->chatCompClass = tpp::getClass(this->env, "net/minecraft/util/ChatComponentText");
-	if (this->chatCompClass == nullptr)
+	tpp::chat::chatCompClass = tpp::getClass(tpp::env, "net/minecraft/util/ChatComponentText");
+	if (tpp::chat::chatCompClass == nullptr)
 	{
 		std::cout << "[-] Failed to get chat component class\n";
 		return false;
 	}
 
-	this->guiInGameClass = tpp::getClass(this->env, "net/minecraft/client/gui/GuiIngame");
-	if (this->guiInGameClass == nullptr)
+	tpp::chat::guiInGameClass = tpp::getClass(tpp::env, "net/minecraft/client/gui/GuiIngame");
+	if (tpp::chat::guiInGameClass == nullptr)
 	{
 		std::cout << "[-] Could not get the GuiIngame class\n";
 		return false;
 	}
 
-	this->guiNewChatClass = tpp::getClass(this->env, "net/minecraft/client/gui/GuiNewChat");
-	if (this->guiNewChatClass == nullptr)
+	tpp::chat::guiNewChatClass = tpp::getClass(tpp::env, "net/minecraft/client/gui/GuiNewChat");
+	if (tpp::chat::guiNewChatClass == nullptr)
 	{
 		std::cout << "[-] Could not get the GuiNewChat class\n";
 		return false;
 	}
 
-	this->chatLineClass = tpp::getClass(this->env, "net/minecraft/client/gui/ChatLine");
-	if (this->chatLineClass == nullptr)
+	tpp::chat::chatLineClass = tpp::getClass(tpp::env, "net/minecraft/client/gui/ChatLine");
+	if (tpp::chat::chatLineClass == nullptr)
 	{
 		std::cout << "[-] Could not get the chatLine class\n";
 		return false;
 	}
 
-	this->listClass = tpp::getClass(this->env, "java/util/List");
-	if (this->listClass == nullptr)
+	tpp::chat::listClass = tpp::getClass(tpp::env, "java/util/List");
+	if (tpp::chat::listClass == nullptr)
 	{
 		std::cout << "[-] Could not get the List class\n";
 		return false;
 	}
 
-	this->addChatMessage = this->env->GetMethodID(EntityPlayerSPClass, "func_145747_a", "(Lnet/minecraft/util/IChatComponent;)V");
-	if (this->addChatMessage == nullptr)
+	tpp::chat::addChatMessage = tpp::env->GetMethodID(EntityPlayerSPClass, "func_145747_a", "(Lnet/minecraft/util/IChatComponent;)V");
+	if (tpp::chat::addChatMessage == nullptr)
 	{
 		std::cout << "[-] Failed to get addChatMessage method\n";
 		return false;
 	}
 
-	this->messageConstructor = this->env->GetMethodID(this->chatCompClass, "<init>", "(Ljava/lang/String;)V");
-	if (this->messageConstructor == nullptr)
+	tpp::chat::messageConstructor = tpp::env->GetMethodID(tpp::chat::chatCompClass, "<init>", "(Ljava/lang/String;)V");
+	if (tpp::chat::messageConstructor == nullptr)
 	{
 		std::cout << "[-] Failed to get constructor for IChatComponent class\n";
 		return false;
 	}
 
-	this->sendChatMessage = this->env->GetMethodID(EntityPlayerSPClass, "func_71165_d", "(Ljava/lang/String;)V");
-	if (this->sendChatMessage == nullptr)
+	tpp::chat::sendChatMessage = tpp::env->GetMethodID(EntityPlayerSPClass, "func_71165_d", "(Ljava/lang/String;)V");
+	if (tpp::chat::sendChatMessage == nullptr)
 	{
 		std::cout << "[-] Could not get the sendChatMessage method\n";
 		return false;
 	}
 
-	auto ingameGuiFieldID = this->env->GetFieldID(mcClass, "field_71456_v", "Lnet/minecraft/client/gui/GuiIngame;");
+	auto ingameGuiFieldID = tpp::env->GetFieldID(mcClass, "field_71456_v", "Lnet/minecraft/client/gui/GuiIngame;");
 	if (ingameGuiFieldID == nullptr)
 	{
 		std::cout << "[-] Could not get the ingameGui field\n";
 		return false;
 	}
 
-	this->ingameGuiInstance = this->env->GetObjectField(mcClassInstance, ingameGuiFieldID);
-	if (this->ingameGuiInstance == nullptr)
+	tpp::chat::ingameGuiInstance = tpp::env->GetObjectField(mcClassInstance, ingameGuiFieldID);
+	if (tpp::chat::ingameGuiInstance == nullptr)
 	{
 		std::cout << "[-] Could not get the ingameGui object\n";
 		return false;
 	}
 
-	auto persistentChatFieldID = this->env->GetFieldID(this->guiInGameClass, "field_73840_e", "Lnet/minecraft/client/gui/GuiNewChat;");
+	auto persistentChatFieldID = tpp::env->GetFieldID(tpp::chat::guiInGameClass, "field_73840_e", "Lnet/minecraft/client/gui/GuiNewChat;");
 	if (persistentChatFieldID == nullptr)
 	{
 		std::cout << "[-] Could not get the GuiNewChat field\n";
 		return false;
 	}
 
-	this->guiNewChatInstance = this->env->GetObjectField(this->ingameGuiInstance, persistentChatFieldID);
-	if (this->guiNewChatInstance == nullptr)
+	tpp::chat::guiNewChatInstance = tpp::env->GetObjectField(tpp::chat::ingameGuiInstance, persistentChatFieldID);
+	if (tpp::chat::guiNewChatInstance == nullptr)
 	{
 		std::cout << "[-] Could not get the GuiNewChat object\n";
 		return false;
 	}
 
-	auto chatLinesField = this->env->GetFieldID(this->guiNewChatClass, "field_146252_h", "Ljava/util/List;");
+	auto chatLinesField = tpp::env->GetFieldID(tpp::chat::guiNewChatClass, "field_146252_h", "Ljava/util/List;");
 	if (chatLinesField == nullptr)
 	{
 		std::cout << "[-] Could not get the chatLines field\n";
 		return false;
 	}
 
-	this->chatLinesInstance = this->env->GetObjectField(this->guiNewChatInstance, chatLinesField);
-	if (this->chatLinesInstance == nullptr)
+	tpp::chat::chatLinesInstance = tpp::env->GetObjectField(tpp::chat::guiNewChatInstance, chatLinesField);
+	if (tpp::chat::chatLinesInstance == nullptr)
 	{
 		std::cout << "[-] Could not get the chatLines object\n";
 		return false;
 	}
 
-	this->listGet = this->env->GetMethodID(this->listClass, "get", "(I)Ljava/lang/Object;");
-	if (this->listGet == nullptr)
+	tpp::chat::listGet = tpp::env->GetMethodID(tpp::chat::listClass, "get", "(I)Ljava/lang/Object;");
+	if (tpp::chat::listGet == nullptr)
 	{
 		std::cout << "[-] Could not get the listGet method\n";
 		return false;
 	}
 
-	this->listSize = this->env->GetMethodID(this->listClass, "size", "()I");
-	if (this->listSize == nullptr)
+	tpp::chat::listSize = tpp::env->GetMethodID(tpp::chat::listClass, "size", "()I");
+	if (tpp::chat::listSize == nullptr)
 	{
 		std::cout << "[-] Could not get the listSize method\n";
 		return false;
 	}
 
-	this->getChatComp = this->env->GetMethodID(this->chatLineClass, "func_151461_a", "()Lnet/minecraft/util/IChatComponent;");
-	if (this->getChatComp == nullptr)
+	tpp::chat::getChatComp = tpp::env->GetMethodID(tpp::chat::chatLineClass, "func_151461_a", "()Lnet/minecraft/util/IChatComponent;");
+	if (tpp::chat::getChatComp == nullptr)
 	{
 		std::cout << "[-] Could not get the getChatComponent method\n";
 		return false;
 	}
 
-	this->getUnformattedText = this->env->GetMethodID(this->chatCompClass, "func_150260_c", "()Ljava/lang/String;");
-	if (this->getUnformattedText == nullptr)
+	tpp::chat::getUnformattedText = tpp::env->GetMethodID(tpp::chat::chatCompClass, "func_150260_c", "()Ljava/lang/String;");
+	if (tpp::chat::getUnformattedText == nullptr)
 	{
 		std::cout << "[-] Could not get the unformatted text method\n";
 		return false;
@@ -158,71 +140,66 @@ bool Chat::init(
 	return true;
 }
 
-bool Chat::isInit()
-{
-	return this->mInit;
-}
-
-bool Chat::sendMessageToPlayer(const std::string& message)
+bool tpp::chat::send_msg_to_player(const std::string& msg)
 {
 	jobject chatComp{ nullptr };
 	jstring text{ nullptr };
 
-	text = this->env->NewStringUTF(message.c_str());
+	text = tpp::env->NewStringUTF(msg.c_str());
 
-	chatComp = this->env->NewObject(chatCompClass, this->messageConstructor, text);
+	chatComp = tpp::env->NewObject(chatCompClass, tpp::chat::messageConstructor, text);
 	if (chatComp == nullptr)
 	{
 		std::cout << "Failed to create chat component object\n";
 		return false;
 	}
 
-	this->env->CallVoidMethod(this->mcThePlayerInstance, this->addChatMessage, chatComp);
+	tpp::env->CallVoidMethod(tpp::chat::mcThePlayerInstance, tpp::chat::addChatMessage, chatComp);
 
-	this->env->DeleteLocalRef(text);
-	this->env->DeleteLocalRef(chatComp);
+	tpp::env->DeleteLocalRef(text);
+	tpp::env->DeleteLocalRef(chatComp);
 
 	return true;
 }
 
-bool Chat::sendMessageFromPlayer(const std::string& message)
+bool tpp::chat::send_msg_from_player(const std::string& msg)
 {
 	jstring text{ nullptr };
 
-	text = this->env->NewStringUTF(message.c_str());
+	text = tpp::env->NewStringUTF(msg.c_str());
 
-	this->env->CallVoidMethod(this->mcThePlayerInstance, this->sendChatMessage, text);
+	tpp::env->CallVoidMethod(tpp::chat::mcThePlayerInstance, tpp::chat::sendChatMessage, text);
 
-	this->env->DeleteLocalRef(text);
+	tpp::env->DeleteLocalRef(text);
 
 	return true;
 }
 
-std::string Chat::getLatestChatMessage()
+std::string tpp::chat::get_latest_msg()
 {
-	int size = this->env->CallIntMethod(this->chatLinesInstance, this->listSize);
+	int size = tpp::env->CallIntMethod(tpp::chat::chatLinesInstance, tpp::chat::listSize);
 	if (size == 0)
 		return "No chat message to display";
 
-	jobject lastChatLine = this->env->CallObjectMethod(this->chatLinesInstance, this->listGet, 0);
+	jobject lastChatLine = tpp::env->CallObjectMethod(tpp::chat::chatLinesInstance, tpp::chat::listGet, 0);
 	if (lastChatLine == nullptr)
 	{
 		return "lastChatLine is a nullptr";
 	}
 
-	jobject chatComponent = this->env->CallObjectMethod(lastChatLine, this->getChatComp);
+	jobject chatComponent = tpp::env->CallObjectMethod(lastChatLine, tpp::chat::getChatComp);
 	if (chatComponent == nullptr)
 	{
 		return "chatComponent is a nullptr";
 	}
 
-	jstring formattedText = (jstring)this->env->CallObjectMethod(chatComponent, this->getUnformattedText);
+	jstring formattedText = (jstring)tpp::env->CallObjectMethod(chatComponent, tpp::chat::getUnformattedText);
 	if (formattedText == nullptr)
 	{
 		return "formattedText is a nullptr";
 	}
 
-	auto result = this->env->GetStringUTFChars(formattedText, 0);
+	auto result = tpp::env->GetStringUTFChars(formattedText, 0);
 
 	return result;
 }
