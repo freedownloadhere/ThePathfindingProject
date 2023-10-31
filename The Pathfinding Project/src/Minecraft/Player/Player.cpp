@@ -10,7 +10,7 @@ bool tpp::player::initialize(
 	tpp::player::mcClass = mcClass;
 	tpp::player::mcClassInstance = mcClassInstance;
 
-	tpp::player::EntityPlayerSPClass = tpp::getClass(tpp::env, "net/minecraft/client/entity/EntityPlayerSP");
+	tpp::player::EntityPlayerSPClass = tpp::get_class(tpp::env, "net/minecraft/client/entity/EntityPlayerSP");
 	if (tpp::player::EntityPlayerSPClass == nullptr)
 	{
 		std::cout << "[-] Failed to get class EntityPlayerSP\n";
@@ -33,7 +33,7 @@ bool tpp::player::initialize(
 		return false;
 	}
 
-	tpp::player::InventoryPlayerClass = tpp::getClass(tpp::env, "net/minecraft/entity/player/InventoryPlayer");
+	tpp::player::InventoryPlayerClass = tpp::get_class(tpp::env, "net/minecraft/entity/player/InventoryPlayer");
 	if (tpp::player::InventoryPlayerClass == nullptr)
 	{
 		std::cout << "[-] Failed to get class InventoryPlayer\n";
@@ -70,7 +70,7 @@ bool tpp::player::initialize(
 
 	tpp::player::mainInventoryArray = static_cast<jobjectArray>(mainInventoryObj);
 
-	tpp::player::itemStackClass = tpp::getClass(tpp::env, "net/minecraft/item/ItemStack");
+	tpp::player::itemStackClass = tpp::get_class(tpp::env, "net/minecraft/item/ItemStack");
 	if (tpp::player::itemStackClass == nullptr)
 	{
 		std::cout << "[-] Could not find class itemStack\n";
@@ -119,7 +119,7 @@ bool tpp::player::initialize(
 		return false;
 	}
 
-	jclass movingObjectPositionClass = tpp::getClass(tpp::env, "net/minecraft/util/MovingObjectPosition");
+	jclass movingObjectPositionClass = tpp::get_class(tpp::env, "net/minecraft/util/MovingObjectPosition");
 	if (movingObjectPositionClass == nullptr)
 	{
 		std::cout << "[-] Could not get the objectMouseOver class\n";
@@ -133,7 +133,7 @@ bool tpp::player::initialize(
 		return false;
 	}
 
-	jclass blockPosClass = tpp::getClass(tpp::env, "net/minecraft/util/BlockPos");
+	jclass blockPosClass = tpp::get_class(tpp::env, "net/minecraft/util/BlockPos");
 	if (blockPosClass == nullptr)
 	{
 		std::cout << "[-] Could not get block pos class\n";
@@ -168,7 +168,7 @@ bool tpp::player::initialize(
 		return false;
 	}
 
-	jclass entityClass = tpp::getClass(tpp::env, "net/minecraft/entity/Entity");
+	jclass entityClass = tpp::get_class(tpp::env, "net/minecraft/entity/Entity");
 	if (entityClass == nullptr)
 	{
 		std::cout << "[-] Could not get the Entity class\n";
@@ -182,7 +182,7 @@ bool tpp::player::initialize(
 		return false;
 	}
 
-	tpp::player::enumFacingClass = tpp::getClass(tpp::env, "net/minecraft/util/EnumFacing");
+	tpp::player::enumFacingClass = tpp::get_class(tpp::env, "net/minecraft/util/EnumFacing");
 	if (tpp::player::enumFacingClass == nullptr)
 	{
 		std::cout << "[-] Could not get the enumFacing class\n";
@@ -230,7 +230,7 @@ void tpp::player::update_viewangles()
 {
 	tpp::player::viewAngles.yaw = tpp::env->GetFloatField(tpp::player::mcThePlayerInstance, tpp::player::yawField);
 	tpp::player::viewAngles.pitch = tpp::env->GetFloatField(tpp::player::mcThePlayerInstance, tpp::player::pitchField);
-	tpp::player::viewAngles.yaw = tpp::clampAngle(tpp::player::viewAngles.yaw, -180, 180);
+	tpp::player::viewAngles.yaw = tpp::clamp_angle(tpp::player::viewAngles.yaw, -180, 180);
 }
 
 void tpp::player::set_viewangles(const ViewAngles& newViewAngles)

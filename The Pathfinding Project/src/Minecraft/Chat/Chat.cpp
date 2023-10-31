@@ -11,35 +11,35 @@ bool tpp::chat::initialize(
 {
 	tpp::chat::mcThePlayerInstance = mcThePlayerInstance;
 
-	tpp::chat::chatCompClass = tpp::getClass(tpp::env, "net/minecraft/util/ChatComponentText");
+	tpp::chat::chatCompClass = tpp::get_class(tpp::env, "net/minecraft/util/ChatComponentText");
 	if (tpp::chat::chatCompClass == nullptr)
 	{
 		std::cout << "[-] Failed to get chat component class\n";
 		return false;
 	}
 
-	tpp::chat::guiInGameClass = tpp::getClass(tpp::env, "net/minecraft/client/gui/GuiIngame");
+	tpp::chat::guiInGameClass = tpp::get_class(tpp::env, "net/minecraft/client/gui/GuiIngame");
 	if (tpp::chat::guiInGameClass == nullptr)
 	{
 		std::cout << "[-] Could not get the GuiIngame class\n";
 		return false;
 	}
 
-	tpp::chat::guiNewChatClass = tpp::getClass(tpp::env, "net/minecraft/client/gui/GuiNewChat");
+	tpp::chat::guiNewChatClass = tpp::get_class(tpp::env, "net/minecraft/client/gui/GuiNewChat");
 	if (tpp::chat::guiNewChatClass == nullptr)
 	{
 		std::cout << "[-] Could not get the GuiNewChat class\n";
 		return false;
 	}
 
-	tpp::chat::chatLineClass = tpp::getClass(tpp::env, "net/minecraft/client/gui/ChatLine");
+	tpp::chat::chatLineClass = tpp::get_class(tpp::env, "net/minecraft/client/gui/ChatLine");
 	if (tpp::chat::chatLineClass == nullptr)
 	{
 		std::cout << "[-] Could not get the chatLine class\n";
 		return false;
 	}
 
-	tpp::chat::listClass = tpp::getClass(tpp::env, "java/util/List");
+	tpp::chat::listClass = tpp::get_class(tpp::env, "java/util/List");
 	if (tpp::chat::listClass == nullptr)
 	{
 		std::cout << "[-] Could not get the List class\n";

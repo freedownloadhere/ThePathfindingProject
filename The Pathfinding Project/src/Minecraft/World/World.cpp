@@ -9,21 +9,21 @@ bool tpp::world::initialize(
 {
 	tpp::env = env;
 
-	tpp::world::worldClientClass = tpp::getClass(tpp::env, "net/minecraft/client/multiplayer/tpp::worldClient");
+	tpp::world::worldClientClass = tpp::get_class(tpp::env, "net/minecraft/client/multiplayer/WorldClient");
 	if (worldClientClass == nullptr)
 	{
 		std::cout << "[-] Could not find the world client class\n";
 		return false;
 	}
 
-	tpp::world::blockPosClass = tpp::getClass(tpp::env, "net/minecraft/util/BlockPos");
+	tpp::world::blockPosClass = tpp::get_class(tpp::env, "net/minecraft/util/BlockPos");
 	if (blockPosClass == nullptr)
 	{
 		std::cout << "[-] Could not find the block pos class\n";
 		return false;
 	}
 
-	tpp::world::blockClass = tpp::getClass(tpp::env, "net/minecraft/block/Block");
+	tpp::world::blockClass = tpp::get_class(tpp::env, "net/minecraft/block/Block");
 	if (blockClass == nullptr)
 	{
 		std::cout << "[-] Could not find the block class\n";
@@ -60,7 +60,7 @@ bool tpp::world::initialize(
 		return false;
 	}
 
-	jclass blockStateInterface = tpp::getClass(tpp::env, "net/minecraft/block/state/IBlockState");
+	jclass blockStateInterface = tpp::get_class(tpp::env, "net/minecraft/block/state/IBlockState");
 	if (blockStateInterface == nullptr)
 	{
 		std::cout << "[-] Could not get the block state interface\n";

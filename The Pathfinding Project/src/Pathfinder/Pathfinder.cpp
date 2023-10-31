@@ -24,51 +24,37 @@ namespace std
 	};
 }
 
-Pathfinder::Pathfinder(const std::shared_ptr<Minecraft>& minecraft)
+static const Vector3 directionalVector[12] =
 {
-	this->mInit = this->init(minecraft);
+	{0, 0, -1}, // NORTH
+	{1, 0, 0},  // EAST
+	{0, 0, 1},  // SOUTH
+	{-1, 0, 0}, // WEST
+	{0, -1, -1}, // NORTH + DOWN
+	{1, -1, 0},  // EAST + DOWN
+	{0, -1, 1},  // SOUTH + DOWN
+	{-1, -1, 0}, // WEST + DOWN
+	{0, 1, -1}, // NORTH + UP
+	{1, 1, 0},  // EAST + UP
+	{0, 1, 1},  // SOUTH + UP
+	{-1, 1, 0}, // WEST + UP
+};
 
-	if (!this->mInit)
-		std::cout << "Failed to initialize Pathfinder class\n";
-}
+static const Vector3
+	upOne{ 0, 1, 0 },
+	upTwo{ 0, 2, 0 },
+	getBlockGoalpoint{ 0.5, 1, 0.5 };
 
-bool Pathfinder::init(const std::shared_ptr<Minecraft>& minecraft)
+static constexpr double errorMargin{ 0.3 };
+
+static std::unordered_map<Vector3, bool> walkableBlockCache;
+
+bool tpp::pathfinder::initialize()
 {
-	this->minecraft = minecraft;
-
-	this->wasd[0][0].type = INPUT_KEYBOARD;
-	this->wasd[0][0].ki.wVk = 0x57;
-	this->wasd[0][1].type = INPUT_KEYBOARD;
-	this->wasd[0][1].ki.wVk = 0x57;
-	this->wasd[0][1].ki.dwFlags = KEYEVENTF_KEYUP;
-
-	this->wasd[1][0].type = INPUT_KEYBOARD;
-	this->wasd[1][0].ki.wVk = 0x41;
-	this->wasd[1][1].type = INPUT_KEYBOARD;
-	this->wasd[1][1].ki.wVk = 0x41;
-	this->wasd[1][1].ki.dwFlags = KEYEVENTF_KEYUP;
-
-	this->wasd[2][0].type = INPUT_KEYBOARD;
-	this->wasd[2][0].ki.wVk = 0x53;
-	this->wasd[2][1].type = INPUT_KEYBOARD;
-	this->wasd[2][1].ki.wVk = 0x53;
-	this->wasd[2][1].ki.dwFlags = KEYEVENTF_KEYUP;
-
-	this->wasd[3][0].type = INPUT_KEYBOARD;
-	this->wasd[3][0].ki.wVk = 0x44;
-	this->wasd[3][1].type = INPUT_KEYBOARD;
-	this->wasd[3][1].ki.wVk = 0x44;
-	this->wasd[3][1].ki.dwFlags = KEYEVENTF_KEYUP;
-
 	return true;
 }
 
-bool Pathfinder::isInit()
-{
-	return this->mInit;
-}
-
-bool Pathfinder::listContains(
+bool tpp::pathfinder::list_contains(
 	const AstarVector3& element,
 	const std::vector<AstarVector3>& heap
 )
@@ -81,20 +67,20 @@ bool Pathfinder::listContains(
 	return false;
 }
 
-bool Pathfinder::isWalkable(const AstarVector3& coordinates)
+bool tpp::pathfinder::is_walkable(const AstarVector3& coordinates)
 {
-	Vector3 v[3] = { coordinates, coordinates + this->upOne, coordinates + this->upTwo };
+	Vector3 v[3] = { coordinates, coordinates + upOne, coordinates + upTwo };
 
 	for (const auto& i : v)
-		if (!this->walkableBlockCache.contains(i))
-			this->walkableBlockCache[i] = !Block::nonSolid.contains(this->minecraft->world->getBlockID(i));
+		if (!walkableBlockCache.contains(i))
+			walkableBlockCache[i] = !Block::nonSolid.contains(tpp::world::get_block_id(i));
 
 	return(
-		this->walkableBlockCache[v[0]] && !this->walkableBlockCache[v[1]] && !this->walkableBlockCache[v[2]]
+		walkableBlockCache[v[0]] && !walkableBlockCache[v[1]] && !walkableBlockCache[v[2]]
 		);
 }
 
-bool Pathfinder::makePath(Vector3 start, Vector3 target, int flags, const std::string& blockToSet)
+bool tpp::pathfinder::make_path(Vector3 start, Vector3 target, int flags, const std::string& blockToSet)
 {
 	if (start.y < 0)
 	{
@@ -113,14 +99,14 @@ bool Pathfinder::makePath(Vector3 start, Vector3 target, int flags, const std::s
 		while
 			(
 				start.y >= 0 &&
-				Block::nonSolid.contains(this->minecraft->world->getBlockID(start))
+				Block::nonSolid.contains(tpp::world::get_block_id(start))
 				)
 			start.y--;
 
 		while
 			(
 				target.y >= 0 &&
-				Block::nonSolid.contains(this->minecraft->world->getBlockID(target))
+				Block::nonSolid.contains(tpp::world::get_block_id(target))
 				)
 			target.y--;
 	}
@@ -138,9 +124,9 @@ bool Pathfinder::makePath(Vector3 start, Vector3 target, int flags, const std::s
 	}
 
 	if (!(flags & (int)MakePathFlags::USEPREVCACHE))
-		this->walkableBlockCache.clear();
+		walkableBlockCache.clear();
 
-	std::list<Vector3> path = this->defaultAstar(start, target);
+	std::list<Vector3> path = default_astar(start, target);
 	if (path.empty())
 	{
 		std::cout << "[makePath] Failed to make a path to " << target << ".\n";
@@ -151,7 +137,7 @@ bool Pathfinder::makePath(Vector3 start, Vector3 target, int flags, const std::s
 	{
 		for (const auto& i : path)
 		{
-			this->minecraft->chat->sendMessageFromPlayer(
+			tpp::chat::send_msg_from_player(
 				"/setblock " + std::to_string(i.x) + " " + std::to_string(i.y) + " " + std::to_string(i.z) + " " + blockToSet
 			);
 			std::this_thread::sleep_for(10ms);
@@ -160,23 +146,23 @@ bool Pathfinder::makePath(Vector3 start, Vector3 target, int flags, const std::s
 
 	if (flags & (int)MakePathFlags::TRAVERSE)
 	{
-		this->traversePath(path);
+		traverse_path(path);
 	}
 
 	return true;
 }
 
-bool Pathfinder::goTo(Vector3 target, int flags, const std::string& blockToSet)
+bool tpp::pathfinder::go_to(Vector3 target, int flags, const std::string& blockToSet)
 {
-	return this->makePath(
-		this->minecraft->player->getBlockBelowPosition(), 
+	return make_path(
+		tpp::player::get_below_pos(), 
 		target, 
 		flags, 
 		blockToSet
 	);
 }
 
-std::list<Vector3> Pathfinder::defaultAstar(const Vector3& start, const Vector3& target)
+std::list<Vector3> tpp::pathfinder::default_astar(const Vector3& start, const Vector3& target)
 {
 	std::vector<AstarVector3> heapToSearch;
 	heapToSearch.reserve(500);
@@ -185,8 +171,8 @@ std::list<Vector3> Pathfinder::defaultAstar(const Vector3& start, const Vector3&
 	std::unordered_map<AstarVector3, AstarVector3> connections;
 
 	AstarVector3 current{ start };
-	current.setG(0);
-	current.setH(Vector3::manhattanDistance(current, target));
+	current.set_G(0);
+	current.set_H(Vector3::manhattan_distance(current, target));
 
 	heapToSearch.emplace_back(current);
 
@@ -212,12 +198,12 @@ std::list<Vector3> Pathfinder::defaultAstar(const Vector3& start, const Vector3&
 			return result;
 		}
 
-		for (const auto& k : this->directionalVector)
+		for (const auto& k : directionalVector)
 		{
 			AstarVector3 neighbour{ current + k };
 			double distanceToNeighbour = (current.y == neighbour.y ? current.G + 10 : current.G + 14);
 
-			if (!this->isWalkable(neighbour))
+			if (!is_walkable(neighbour))
 				continue;
 
 			if (processed.contains(neighbour))
@@ -225,13 +211,13 @@ std::list<Vector3> Pathfinder::defaultAstar(const Vector3& start, const Vector3&
 
 			if (neighbour.G > distanceToNeighbour)
 			{
-				neighbour.setG(distanceToNeighbour);
+				neighbour.set_G(distanceToNeighbour);
 				connections[neighbour] = current;
 			}
 
-			if (!this->listContains(neighbour, heapToSearch))
+			if (!list_contains(neighbour, heapToSearch))
 			{
-				neighbour.setH(Vector3::manhattanDistance(current, target));
+				neighbour.set_H(Vector3::manhattan_distance(current, target));
 				heapToSearch.emplace_back(neighbour);
 				std::push_heap(heapToSearch.begin(), heapToSearch.end(), AstarVector3());
 			}
@@ -241,7 +227,7 @@ std::list<Vector3> Pathfinder::defaultAstar(const Vector3& start, const Vector3&
 	return {};
 }
 
-std::vector<std::pair<Vector3, int>> Pathfinder::makeWalkMap(const std::list<Vector3>& path)
+std::vector<std::pair<Vector3, int>> tpp::pathfinder::make_navmap(const std::list<Vector3>& path)
 {
 	std::list<Vector3>::const_iterator it1, it2;
 	it1 = it2 = path.begin();
@@ -266,7 +252,7 @@ std::vector<std::pair<Vector3, int>> Pathfinder::makeWalkMap(const std::list<Vec
 		}
 
 		if (walkMap.empty() || walkMap.back().second != deltaEquals)
-			walkMap.emplace_back(*it1 + this->getBlockGoalpoint, deltaEquals);
+			walkMap.emplace_back(*it1 + getBlockGoalpoint, deltaEquals);
 
 		it1++;
 		it2++;
@@ -277,11 +263,11 @@ std::vector<std::pair<Vector3, int>> Pathfinder::makeWalkMap(const std::list<Vec
 	return walkMap;
 }
 
-void Pathfinder::traversePath(const std::list<Vector3>& path)
+void tpp::pathfinder::traverse_path(const std::list<Vector3>& path)
 {
 	// Assuming that player pos = first element in path.
 
-	const auto walkMap{ this->makeWalkMap(path) };
+	const auto walkMap{ make_navmap(path) };
 
 	if (walkMap.empty())
 		return;
@@ -290,11 +276,11 @@ void Pathfinder::traversePath(const std::list<Vector3>& path)
 
 	while (iterator != walkMap.end() && !GetAsyncKeyState(VK_NUMPAD0))
 	{
-		auto distance = Vector3::euclideanDistance(this->minecraft->player->getFootPosition(), iterator->first);
+		auto distance = Vector3::euclidean_distance(tpp::player::get_foot_pos(), iterator->first);
 
-		if (distance <= this->errorMargin)
+		if (distance <= errorMargin)
 		{
-			this->minecraft->player->setViewAngles(tpp::enumFacingToViewAngles[iterator->second]);
+			tpp::player::set_viewangles(tpp::enumFacingToViewAngles[iterator->second]);
 			//SendInput(1, &this->wasd[0][0], sizeof(INPUT));
 			iterator++;
 		}

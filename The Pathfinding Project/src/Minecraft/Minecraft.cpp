@@ -2,17 +2,7 @@
 
 using namespace tpp;
 
-Minecraft::Minecraft()
-{
-	this->mInit = this->init();
-
-	if (!this->mInit)
-		std::cout << "	[-] An error occured while initializing Minecraft\n";
-	else
-		std::cout << "[+] Successfully initialized Minecraft\n";
-}
-
-bool Minecraft::init()
+bool minecraft::initialize()
 {
 	JavaVM* jvm{ nullptr };
 
@@ -22,71 +12,54 @@ bool Minecraft::init()
 		return false;
 	}
 
-	jvm->AttachCurrentThread((void**)&this->env, nullptr);
-	if (this->env == nullptr)
+	jvm->AttachCurrentThread((void**)&env, nullptr);
+	if (env == nullptr)
 	{
 		std::cout << "[-] Failed to attach current JVM thread!\n";
 		return false;
 	}
 
-	this->mcClass = tpp::getClass(this->env, "net/minecraft/client/Minecraft");
-	if (this->mcClass == nullptr)
+	minecraft::mcClass = get_class(env, "net/minecraft/client/Minecraft");
+	if (minecraft::mcClass == nullptr)
 	{
 		std::cout << "[-] Failed to find class Minecraft!\n";
 		std::cout << "[INFO] Are you using MC Forge 1.8.9?\n";
 		return false;
 	}
 
-	jfieldID fieldID{ env->GetStaticFieldID(this->mcClass, "field_71432_P", "Lnet/minecraft/client/Minecraft;") };
+	jfieldID fieldID{ env->GetStaticFieldID(minecraft::mcClass, "field_71432_P", "Lnet/minecraft/client/Minecraft;") };
 	if (fieldID == nullptr)
 	{
 		std::cout << "[-] Failed to get static field ID theMinecraft!\n";
 		return false;
 	}
 
-	this->mcClassInstance = env->GetStaticObjectField(this->mcClass, fieldID);
-	if (this->mcClassInstance == nullptr)
+	minecraft::mcClassInstance = env->GetStaticObjectField(minecraft::mcClass, fieldID);
+	if (minecraft::mcClassInstance == nullptr)
 	{
 		std::cout << "[-] Failed to get static object field theMinecraft!\n";
 		return false;
 	}
 
-	this->player = std::make_unique<Player>(
-		env,
+	player::initialize(
 		mcClass,
 		mcClassInstance
 	);
-	if (this->player == nullptr || !this->player->isInit())
-	{
-		return false;
-	}
+	if (!player::init) return false;
 
-	this->world = std::make_unique<World>(
-		env,
+	world::initialize(
 		mcClass,
 		mcClassInstance
 	);
-	if (this->world == nullptr || !this->world->isInit())
-	{
-		return false;
-	}
+	if (!world::init) return false;
 
-	this->chat = std::make_unique<Chat>(
-		env,
+	chat::initialize(
 		mcClass,
 		mcClassInstance,
-		this->player->getEntityPlayerSPClass(),
-		this->player->getMcThePlayerInstance()
+		player::EntityPlayerSPClass,
+		player::mcThePlayerInstance
 	);
-	if (this->chat == nullptr || !this->chat->isInit())
-	{
-		return false;
-	}
+	if (!chat::init) return false;
 
 	return true;
-}
-
-bool Minecraft::isInit()
-{
-	return this->mInit;
 }

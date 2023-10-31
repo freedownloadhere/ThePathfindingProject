@@ -9,7 +9,7 @@
 
 namespace tpp
 {
-	jclass getClass(JNIEnv* env, const std::string& path);
+	jclass get_class(JNIEnv* env, const std::string& path);
 	
-	double clampAngle(double angle, double min, double max);
+	double clamp_angle(double angle, double min, double max);
 }

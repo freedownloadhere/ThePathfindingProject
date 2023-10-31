@@ -107,7 +107,7 @@ bool CommandInterface::cmdGoto()
 
 	ss >> blockType;
 
-	return this->mInstance->pathfinder->goTo(coordinates, flags, blockType);
+	return this->mInstance->pathfinder->go_to(coordinates, flags, blockType);
 }
 
 bool CommandInterface::cmdMakePath()
@@ -181,7 +181,7 @@ bool CommandInterface::cmdMakePath()
 		}
 	}
 
-	return this->mInstance->pathfinder->makePath(start, end, flags, blockType);
+	return this->mInstance->pathfinder->make_path(start, end, flags, blockType);
 }
 
 bool CommandInterface::cmdPrint()

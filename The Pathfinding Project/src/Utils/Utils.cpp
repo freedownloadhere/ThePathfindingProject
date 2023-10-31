@@ -2,7 +2,7 @@
 
 using namespace tpp;
 
-jclass tpp::getClass(JNIEnv* env, const std::string& path)
+jclass tpp::get_class(JNIEnv* env, const std::string& path)
 {
 	static std::unordered_map<std::string, jclass> classMap;
 
@@ -46,7 +46,7 @@ jclass tpp::getClass(JNIEnv* env, const std::string& path)
 	return foundclass;
 }
 
-double tpp::clampAngle(double angle, double min, double max)
+double tpp::clamp_angle(double angle, double min, double max)
 {
 	if (angle >= 90)
 		angle -= 360;

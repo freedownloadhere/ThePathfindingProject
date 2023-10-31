@@ -3,52 +3,28 @@
 using namespace tpp;
 using namespace std::literals::chrono_literals;
 
-Instance::Instance()
+bool tpp::instance::initialize()
 {
 	std::cout << "================ (Start of initialization) ================\n\n";
 
-	this->mInit = this->init();
-
 	std::cout << "\n===================== (Client status) =====================\n\n";
 
-	if (!this->mInit)
+	tpp::minecraft::initialize();
+	tpp::pathfinder::initialize();
+
+	if (!tpp::minecraft::init || !tpp::pathfinder::init)
 		std::cout << "[-] Status: not initialized\n";
 	else
 		std::cout << "[+] Status: initialized\n";
 	std::cout << "\n================= (End of initialization) =================\n\n";
 
-	if (this->mInit)
-	{
-		std::cout << "[Welcome] Welcome to The Pathfinding Project!\n";
-		std::cout << "This project is made by FreeDownloadHere, with passion and love :)\n";
-		std::cout << "Keep in mind this is still in its early stages and prone to bugs.\n";
-		std::cout << "Make sure to report any issues on the Github repo!\n";
-		std::cout << "\n===================== (Command input) =====================\n\n";
-	}
-}
-
-bool Instance::init()
-{
-	this->minecraft = std::make_shared<Minecraft>();
-	if (this->minecraft == nullptr || !this->minecraft->isInit())
-		return false;
-
-	this->pathfinder = std::make_unique<Pathfinder>(this->minecraft);
-	if (this->pathfinder == nullptr || !this->pathfinder->isInit())
-		return false;
-
 	return true;
 }
 
-bool Instance::isInit()
-{
-	return this->mInit;
-}
-
-void Instance::run()
+void tpp::instance::run()
 {
 	while (!GetAsyncKeyState(VK_NUMPAD0))
 	{
-		std::this_thread::sleep_for(200ms);
+		std::this_thread::sleep_for(500ms);
 	}
 }

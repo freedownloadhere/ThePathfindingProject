@@ -8,20 +8,10 @@
 #include "../Minecraft/Minecraft.h"
 #include "../Pathfinder/Pathfinder.h"
 
-namespace tpp
+namespace tpp::instance
 {
-	class Instance final
-	{
-	public:
-		Instance();
-		std::shared_ptr<Minecraft> minecraft{ nullptr };
-		std::shared_ptr<Pathfinder> pathfinder{ nullptr };
+	bool initialize();
+	void run();
 
-		void run();
-		bool isInit();
-
-	private:
-		bool mInit{ false };
-		bool init();
-	};
+	bool init{ false };
 }

@@ -1,31 +1,18 @@
 #pragma once
 
-#include <jni.h>
 #include <memory>
 
 #include "Player/Player.h"
 #include "World/World.h"
 #include "Chat/Chat.h"
+#include "../JNI/JNI.h"
 
-namespace tpp
+namespace tpp::minecraft
 {
-	class Minecraft
-	{
-	public:
-		Minecraft();
+	bool initialize();
 
-		std::unique_ptr<Player> player{ nullptr };
-		std::unique_ptr<World> world{ nullptr };
-		std::unique_ptr<Chat> chat{ nullptr };
+	jclass mcClass{ nullptr };
+	jobject mcClassInstance{ nullptr };
 
-		bool isInit();
-
-	private:
-		jclass mcClass{ nullptr };
-		jobject mcClassInstance{ nullptr };
-
-		bool mInit{ false };
-		bool init();
-		JNIEnv* env{ nullptr };
-	};
+	bool init{ false };
 }

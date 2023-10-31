@@ -12,7 +12,7 @@ namespace tpp
 		int id;
 		Vector3 pos;
 
-		inline static std::unordered_set<int>
+		inline static const std::unordered_set<int>
 			blocksToBreak = { 1, 14, 15, 16, 21, 56, 73, 74, 129 },
 			blocksToOpen = { 54, 146 },
 			nonSolid = {
@@ -25,9 +25,9 @@ namespace tpp
 				148, 157, 175, 176, 177, 207
 			};
 
-		bool toBreak() const;
-		bool toOpen() const;
-		bool isAir() const;
-		bool isWalkable() const;
+		bool to_break() const;
+		bool to_open() const;
+		bool is_air() const;
+		bool is_walkable() const;
 	};
 }
