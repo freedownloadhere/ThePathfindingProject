@@ -25,41 +25,132 @@ namespace tpp::jni
 		GET_METHOD_FAILED = 5
 	};
 
-	result initialize();
-
 	inline std::unordered_map<std::string, jclass> class_map;
 	inline std::unordered_map<std::string, std::unordered_map<std::string, jmethodID>> method_map;
 	inline std::unordered_map<std::string, std::unordered_map<std::string, jfieldID>> field_map;
 
-	void debug_dump();
+	result initialize();
 
+	jobject get_obj(const jobject& obj, const std::string& cls, const std::string& fld);
+	jboolean get_bool(const jobject& obj, const std::string& cls, const std::string& fld);
+	jbyte get_byte(const jobject& obj, const std::string& cls, const std::string& fld);
+	jchar get_char(const jobject& obj, const std::string& cls, const std::string& fld);
+	jshort get_short(const jobject& obj, const std::string& cls, const std::string& fld);
+	jint get_int(const jobject& obj, const std::string& cls, const std::string& fld);
+	jlong get_long(const jobject& obj, const std::string& cls, const std::string& fld);
 	jfloat get_float(const jobject& obj, const std::string& cls, const std::string& fld);
 	jdouble get_double(const jobject& obj, const std::string& cls, const std::string& fld);
-	jobject get_obj(const jobject& obj, const std::string& cls, const std::string& fld);
-	jobject get_static_obj(const std::string& cls, const std::string& fld);
 
+	jobject get_static_obj(const std::string& cls, const std::string& fld);
+	jboolean get_static_bool(const std::string& cls, const std::string& fld);
+	jbyte get_static_byte(const std::string& cls, const std::string& fld);
+	jchar get_static_char(const std::string& cls, const std::string& fld);
+	jshort get_static_short(const std::string& cls, const std::string& fld);
+	jint get_static_int(const std::string& cls, const std::string& fld);
+	jlong get_static_long(const std::string& cls, const std::string& fld);
+	jfloat get_static_float(const std::string& cls, const std::string& fld);
+	jdouble get_static_double(const std::string& cls, const std::string& fld);
+	
 	template<typename... Ts>
 	void call_void(const jobject& obj, const std::string& cls, const std::string& mtd, Ts... args)
 	{
 		env->CallVoidMethod(obj, jni::method_map[cls][mtd], args...);
 	}
-
+	template<typename... Ts>
+	jobject call_obj(const jobject& obj, const std::string& cls, const std::string& mtd, Ts... args)
+	{
+		return env->CallObjectMethod(obj, jni::method_map[cls][mtd], args...);
+	}
+	template<typename... Ts>
+	jboolean call_bool(const jobject& obj, const std::string& cls, const std::string& mtd, Ts... args)
+	{
+		return env->CallBooleanMethod(obj, jni::method_map[cls][mtd], args...);
+	}
+	template<typename... Ts>
+	jbyte call_byte(const jobject& obj, const std::string& cls, const std::string& mtd, Ts... args)
+	{
+		return env->CallByteMethod(obj, jni::method_map[cls][mtd], args...);
+	}
+	template<typename... Ts>
+	jchar call_char(const jobject& obj, const std::string& cls, const std::string& mtd, Ts... args)
+	{
+		return env->CallCharMethod(obj, jni::method_map[cls][mtd], args...);
+	}
+	template<typename... Ts>
+	jshort call_short(const jobject& obj, const std::string& cls, const std::string& mtd, Ts... args)
+	{
+		return env->CallShortMethod(obj, jni::method_map[cls][mtd], args...);
+	}
 	template<typename... Ts>
 	jint call_int(const jobject& obj, const std::string& cls, const std::string& mtd, Ts... args)
 	{
 		return env->CallIntMethod(obj, jni::method_map[cls][mtd], args...);
 	}
+	template<typename... Ts>
+	jlong call_long(const jobject& obj, const std::string& cls, const std::string& mtd, Ts... args)
+	{
+		return env->CallLongMethod(obj, jni::method_map[cls][mtd], args...);
+	}
+	template<typename... Ts>
+	jfloat call_float(const jobject& obj, const std::string& cls, const std::string& mtd, Ts... args)
+	{
+		return env->CallFloatMethod(obj, jni::method_map[cls][mtd], args...);
+	}
+	template<typename... Ts>
+	jdouble call_double(const jobject& obj, const std::string& cls, const std::string& mtd, Ts... args)
+	{
+		return env->CallDoubleMethod(obj, jni::method_map[cls][mtd], args...);
+	}
 
+	template<typename... Ts>
+	void call_static_void(const std::string& cls, const std::string& mtd, Ts... args)
+	{
+		env->CallStaticVoidMethod(jni::class_map[cls], jni::method_map[cls][mtd], args...);
+	}
+	template<typename... Ts>
+	jobject call_static_obj(const std::string& cls, const std::string& mtd, Ts... args)
+	{
+		return env->CallStaticObjectMethod(jni::class_map[cls], jni::method_map[cls][mtd], args...);
+	}
+	template<typename... Ts>
+	jboolean call_static_bool(const std::string& cls, const std::string& mtd, Ts... args)
+	{
+		return env->CallStaticBooleanMethod(jni::class_map[cls], jni::method_map[cls][mtd], args...);
+	}
+	template<typename... Ts>
+	jbyte call_static_byte(const std::string& cls, const std::string& mtd, Ts... args)
+	{
+		return env->CallStaticByteMethod(jni::class_map[cls], jni::method_map[cls][mtd], args...);
+	}
+	template<typename... Ts>
+	jchar call_static_char(const std::string& cls, const std::string& mtd, Ts... args)
+	{
+		return env->CallStaticCharMethod(jni::class_map[cls], jni::method_map[cls][mtd], args...);
+	}
+	template<typename... Ts>
+	jshort call_static_short(const std::string& cls, const std::string& mtd, Ts... args)
+	{
+		return env->CallStaticShortMethod(jni::class_map[cls], jni::method_map[cls][mtd], args...);
+	}
 	template<typename... Ts>
 	jint call_static_int(const std::string& cls, const std::string& mtd, Ts... args)
 	{
 		return env->CallStaticIntMethod(jni::class_map[cls], jni::method_map[cls][mtd], args...);
 	}
-
 	template<typename... Ts>
-	jobject call_obj(const jobject& obj, const std::string& cls, const std::string& mtd, Ts... args)
+	jlong call_static_long(const std::string& cls, const std::string& mtd, Ts... args)
 	{
-		return env->CallObjectMethod(obj, jni::method_map[cls][mtd], args...);
+		return env->CallStaticLongMethod(jni::class_map[cls], jni::method_map[cls][mtd], args...);
+	}
+	template<typename... Ts>
+	jfloat call_static_float(const std::string& cls, const std::string& mtd, Ts... args)
+	{
+		return env->CallStaticFloatMethod(jni::class_map[cls], jni::method_map[cls][mtd], args...);
+	}
+	template<typename... Ts>
+	jdouble call_static_double(const std::string& cls, const std::string& mtd, Ts... args)
+	{
+		return env->CallStaticDoubleMethod(jni::class_map[cls], jni::method_map[cls][mtd], args...);
 	}
 
 	template<typename... Ts>

@@ -612,13 +612,13 @@ jni::result jni::initialize()
 		}
 	}
 
-    debug_dump();
+    //debug_dump();
 
     init = true;
     return OK;
 }
 
-void jni::debug_dump()
+void debug_dump()
 {
     for (const auto& i : jni::class_map)
     {
@@ -642,6 +642,41 @@ void jni::debug_dump()
     }
 }
 
+jobject jni::get_obj(const jobject& obj, const std::string& cls, const std::string& fld)
+{
+    return env->GetObjectField(obj, jni::field_map[cls][fld]);
+}
+
+jboolean jni::get_bool(const jobject& obj, const std::string& cls, const std::string& fld)
+{
+    return env->GetBooleanField(obj, jni::field_map[cls][fld]);
+}
+
+jbyte jni::get_byte(const jobject& obj, const std::string& cls, const std::string& fld)
+{
+    return env->GetByteField(obj, jni::field_map[cls][fld]);
+}
+
+jchar jni::get_char(const jobject& obj, const std::string& cls, const std::string& fld)
+{
+    return env->GetCharField(obj, jni::field_map[cls][fld]);
+}
+
+jshort jni::get_short(const jobject& obj, const std::string& cls, const std::string& fld)
+{
+    return env->GetShortField(obj, jni::field_map[cls][fld]);
+}
+
+jint jni::get_int(const jobject& obj, const std::string& cls, const std::string& fld)
+{
+    return env->GetIntField(obj, jni::field_map[cls][fld]);
+}
+
+jlong jni::get_long(const jobject& obj, const std::string& cls, const std::string& fld)
+{
+    return env->GetLongField(obj, jni::field_map[cls][fld]);
+}
+
 jfloat jni::get_float(const jobject& obj, const std::string& cls, const std::string& fld)
 {
 	return env->GetFloatField(obj, jni::field_map[cls][fld]);
@@ -652,12 +687,47 @@ jdouble jni::get_double(const jobject& obj, const std::string& cls, const std::s
 	return env->GetDoubleField(obj, jni::field_map[cls][fld]);
 }
 
-jobject jni::get_obj(const jobject& obj, const std::string& cls, const std::string& fld)
-{
-	return env->GetObjectField(obj, jni::field_map[cls][fld]);
-}
-
 jobject jni::get_static_obj(const std::string& cls, const std::string& fld)
 {
-	return env->GetStaticObjectField(jni::class_map[cls], jni::field_map[cls][fld]);
+    return env->GetStaticObjectField(jni::class_map[cls], jni::field_map[cls][fld]);
+}
+
+jboolean jni::get_static_bool(const std::string& cls, const std::string& fld)
+{
+    return env->GetStaticBooleanField(jni::class_map[cls], jni::field_map[cls][fld]);
+}
+
+jbyte jni::get_static_byte(const std::string& cls, const std::string& fld)
+{
+    return env->GetStaticByteField(jni::class_map[cls], jni::field_map[cls][fld]);
+}
+
+jchar jni::get_static_char(const std::string& cls, const std::string& fld)
+{
+    return env->GetStaticCharField(jni::class_map[cls], jni::field_map[cls][fld]);
+}
+
+jshort jni::get_static_short(const std::string& cls, const std::string& fld)
+{
+    return env->GetStaticShortField(jni::class_map[cls], jni::field_map[cls][fld]);
+}
+
+jint jni::get_static_int(const std::string& cls, const std::string& fld)
+{
+    return env->GetStaticIntField(jni::class_map[cls], jni::field_map[cls][fld]);
+}
+
+jlong jni::get_static_long(const std::string& cls, const std::string& fld)
+{
+    return env->GetStaticLongField(jni::class_map[cls], jni::field_map[cls][fld]);
+}
+
+jfloat jni::get_static_float(const std::string& cls, const std::string& fld)
+{
+    return env->GetStaticFloatField(jni::class_map[cls], jni::field_map[cls][fld]);
+}
+
+jdouble jni::get_static_double(const std::string& cls, const std::string& fld)
+{
+    return env->GetStaticDoubleField(jni::class_map[cls], jni::field_map[cls][fld]);
 }
