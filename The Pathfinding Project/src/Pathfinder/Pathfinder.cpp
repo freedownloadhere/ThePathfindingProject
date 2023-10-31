@@ -51,6 +51,7 @@ static std::unordered_map<Vector3, bool> walkableBlockCache;
 
 bool tpp::pathfinder::initialize()
 {
+	init = true;
 	return true;
 }
 

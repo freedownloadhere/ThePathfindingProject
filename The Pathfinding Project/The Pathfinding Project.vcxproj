@@ -175,7 +175,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\CommandInterface\CommandInterface.h" />
     <ClInclude Include="src\Instance\Instance.h" />
     <ClInclude Include="src\JNI\JNI.h" />
     <ClInclude Include="src\Minecraft\Chat\Chat.h" />
@@ -194,7 +193,6 @@
     <ClInclude Include="src\ViewAngles\ViewAngles.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\CommandInterface\CommandInterface.cpp" />
     <ClCompile Include="src\dllmain.cpp" />
     <ClCompile Include="src\Instance\Instance.cpp" />
     <ClCompile Include="src\JNI\JNI.cpp" />

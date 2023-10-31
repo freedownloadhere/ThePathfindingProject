@@ -9,10 +9,16 @@
 
 namespace tpp::minecraft
 {
-	bool initialize();
+	enum result
+	{
+		OK = 0,
+		PLAYER_FAILED = 1,
+		WORLD_FAILED = 2,
+		CHAT_FAILED = 3,
+		GET_INSTANCE_FAILED = 4
+	};
 
-	jclass mcClass{ nullptr };
-	jobject mcClassInstance{ nullptr };
+	result initialize();
 
-	bool init{ false };
+	inline bool init{ false };
 }

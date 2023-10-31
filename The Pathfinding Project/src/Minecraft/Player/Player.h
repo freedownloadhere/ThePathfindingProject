@@ -16,7 +16,6 @@
 namespace tpp::player
 {
 	bool initialize(
-		const jclass& mcClass,
 		const jobject& mcClassInstance
 	);
 
@@ -34,41 +33,5 @@ namespace tpp::player
 	void left_click();
 	void right_click();
 
-	Vector3 position{ 0, 0, 0 };
-	ViewAngles viewAngles{ 0, 0 };
-	std::string inventory[36] = {};
-
-	jclass
-		mcClass{ nullptr },
-		EntityPlayerSPClass{ nullptr },
-		InventoryPlayerClass{ nullptr },
-		itemStackClass{ nullptr },
-		enumFacingClass{ nullptr };
-	jobject
-		mcClassInstance{ nullptr },
-		mcThePlayerInstance{ nullptr },
-		inventoryInstance{ nullptr };
-	jobjectArray
-		mainInventoryArray{ nullptr };
-	jmethodID
-		getBlockPos{ nullptr },
-		blockPosX{ nullptr },
-		blockPosY{ nullptr },
-		blockPosZ{ nullptr },
-		setRotation{ nullptr },
-		getHorizontalFacing{ nullptr },
-		getEnumFacingIndex{ nullptr },
-		displayNameGetter{ nullptr };
-	jfieldID
-		objectMouseOver{ nullptr },
-		positionX{ nullptr },
-		positionY{ nullptr },
-		positionZ{ nullptr },
-		yawField{ nullptr },
-		pitchField{ nullptr };
-	INPUT 
-		leftClickInput[2], 
-		rightClickInput[2];
-
-	bool init{ false };
+	inline bool init{ false };
 }

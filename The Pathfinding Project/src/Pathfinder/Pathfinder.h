@@ -27,5 +27,5 @@ namespace tpp::pathfinder
 	bool list_contains(const AstarVector3& element, const std::vector<AstarVector3>& heap);
 	bool is_walkable(const AstarVector3& coordinates);
 
-	bool init{ false };
+	inline bool init{ false };
 }
