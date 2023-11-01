@@ -7,10 +7,7 @@
 
 namespace tpp::chat
 {
-	bool initialize(
-		const jobject& mcClassInstance,
-		const jobject& mcThePlayerInstance
-	);
+	bool initialize();
 
 	bool send_msg_to_player(const std::string& message);
 	bool send_msg_from_player(const std::string& message);

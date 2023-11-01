@@ -4,6 +4,7 @@
 #include <Windows.h>
 #include <map>
 #include <set>
+#include <vector>
 #include <random>
 #include <thread>
 
@@ -21,7 +22,6 @@ namespace tpp::pathfinder
 	bool make_path(Vector3 start, Vector3 target, int flags = 0, const std::string& blockToSet = "none");
 
 	std::list<Vector3> default_astar(const Vector3& start, const Vector3& target);
-	void traverse_path(const std::list<Vector3>& path);
 
 	std::vector<std::pair<Vector3, int>> make_navmap(const std::list<Vector3>& path);
 	bool list_contains(const AstarVector3& element, const std::vector<AstarVector3>& heap);

@@ -15,9 +15,7 @@
 
 namespace tpp::player
 {
-	bool initialize(
-		const jobject& mcClassInstance
-	);
+	bool initialize();
 
 	void update_inv();
 	void update_pos();

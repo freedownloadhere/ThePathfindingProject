@@ -4,12 +4,12 @@ using namespace tpp;
 
 bool Block::to_break() const
 {
-	return this->blocksToBreak.contains(this->id);
+	return this->blocks_to_break.contains(this->id);
 }
 
 bool Block::to_open() const
 {
-	return this->blocksToOpen.contains(this->id);
+	return this->blocks_to_open.contains(this->id);
 }
 
 bool Block::is_air() const
@@ -19,5 +19,5 @@ bool Block::is_air() const
 
 bool Block::is_walkable() const
 {
-	return !this->nonSolid.contains(this->id);
+	return !this->nonsolid.contains(this->id);
 }

@@ -8,9 +8,7 @@
 
 namespace tpp::world
 {
-	bool initialize(
-		const jobject& mcClassInstance
-	);
+	bool initialize();
 
 	int get_block_id(const Vector3& pos);
 

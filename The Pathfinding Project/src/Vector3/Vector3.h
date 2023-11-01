@@ -47,7 +47,7 @@ namespace tpp
 	};
 	const Vector3 nullvector(-566547550, -566547550, -566547550);
 	const Vector3 zerovector(0, 0, 0);
-	const Vector3 enumFacingVec[6] =
+	const Vector3 enum_facing_vec[6] =
 	{
 		{0, -1, 0},	// DOWN
 		{0, 1, 0},  // UP

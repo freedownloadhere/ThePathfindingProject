@@ -2,40 +2,14 @@
 
 using namespace tpp;
 
-namespace tpp::chat
+static jobject chat_list{ nullptr };
+
+bool chat::initialize()
 {
-	static jobject
-		mcThePlayerInstance{ nullptr },
-		ingameGuiInstance{ nullptr },
-		guiNewChatInstance{ nullptr },
-		chatLinesInstance{ nullptr };
-}
-
-bool chat::initialize(
-	const jobject& mcClassInstance,
-	const jobject& mcThePlayerInstance
-)
-{
-	chat::mcThePlayerInstance = mcThePlayerInstance;
-
-	ingameGuiInstance = jni::get_obj(mcClassInstance, "Minecraft", "ingameGUI");
-	if (ingameGuiInstance == nullptr)
+	chat_list = jni::get_obj("GuiNewChat", "chatLines");
+	if (chat_list == nullptr)
 	{
-		std::cout << "[-] Could not get the ingameGui object\n";
-		return false;
-	}
-
-	guiNewChatInstance = jni::get_obj(ingameGuiInstance, "GuiIngame", "persistantChatGUI");
-	if (guiNewChatInstance == nullptr)
-	{
-		std::cout << "[-] Could not get the GuiNewChat object\n";
-		return false;
-	}
-
-	chatLinesInstance = jni::get_obj(guiNewChatInstance, "GuiNewChat", "chatLines");
-	if (chatLinesInstance == nullptr)
-	{
-		std::cout << "[-] Could not get the chatLines object\n";
+		std::cout << "[-] Could not get the chat_list object\n";
 		return false;
 	}
 
@@ -45,22 +19,22 @@ bool chat::initialize(
 
 bool chat::send_msg_to_player(const std::string& msg)
 {
-	jobject chatComp{ nullptr };
+	jobject chat_comp{ nullptr };
 	jstring text{ nullptr };
 
 	text = env->NewStringUTF(msg.c_str());
 
-	chatComp = jni::new_obj("ChatComponentText", "<init>", text);
-	if (chatComp == nullptr)
+	chat_comp = jni::new_obj("ChatComponentText", "<init>", text);
+	if (chat_comp == nullptr)
 	{
 		std::cout << "Failed to create chat component object\n";
 		return false;
 	}
 
-	jni::call_void(mcThePlayerInstance, "EntityPlayerSP", "addChatMessage", chatComp);
+	jni::call_void("EntityPlayerSP", "addChatMessage", chat_comp);
 
 	env->DeleteLocalRef(text);
-	env->DeleteLocalRef(chatComp);
+	env->DeleteLocalRef(chat_comp);
 
 	return true;
 }
@@ -71,7 +45,7 @@ bool chat::send_msg_from_player(const std::string& msg)
 
 	text = env->NewStringUTF(msg.c_str());
 
-	jni::call_void(mcThePlayerInstance, "EntityPlayerSP", "sendChatMessage", text);
+	jni::call_void("EntityPlayerSP", "sendChatMessage", text);
 
 	env->DeleteLocalRef(text);
 
@@ -80,29 +54,29 @@ bool chat::send_msg_from_player(const std::string& msg)
 
 std::string chat::get_latest_msg()
 {
-	int size = jni::call_int(chatLinesInstance, "List", "size");
+	int size = jni::call_int(chat_list, "List", "size");
 	if (size == 0)
 		return "No chat message to display";
 
-	jobject lastChatLine = jni::call_obj(chatLinesInstance, "List", "get", 0);
-	if (lastChatLine == nullptr)
+	jobject last_chatline = jni::call_obj(chat_list, "List", "get", 0);
+	if (last_chatline == nullptr)
 	{
-		return "lastChatLine is a nullptr";
+		return "last_chatline is a nullptr";
 	}
 
-	jobject chatComponent = jni::call_obj(lastChatLine, "ChatLine", "getChatComponent");
-	if (chatComponent == nullptr)
+	jobject chat_component = jni::call_obj(last_chatline, "ChatLine", "getChatComponent");
+	if (chat_component == nullptr)
 	{
-		return "chatComponent is a nullptr";
+		return "chat_component is a nullptr";
 	}
 
-	jstring formattedText = (jstring)jni::call_obj(chatComponent, "ChatComponentText", "getUnformattedText");
-	if (formattedText == nullptr)
+	jstring formatted_text = jni::call_str(chat_component, "ChatComponentText", "getUnformattedText");
+	if (formatted_text == nullptr)
 	{
-		return "formattedText is a nullptr";
+		return "formatted_text is a nullptr";
 	}
 
-	auto result = env->GetStringUTFChars(formattedText, 0);
+	auto result = env->GetStringUTFChars(formatted_text, 0);
 
 	return result;
 }
