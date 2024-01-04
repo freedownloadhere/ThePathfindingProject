@@ -1,44 +1,16 @@
 #pragma once
 
 #include <iostream>
-#include <jni.h>
 
 #include "../../Vector3/Vector3.h"
 #include "../../Utils/Utils.h"
+#include "../../JNI/JNI.h"
 
-namespace tpp
+namespace tpp::world
 {
-	class World
-	{
-	public:
-		World(
-			JNIEnv* env,
-			const jclass& mcClass,
-			const jobject& mcClassInstance
-		);
+	bool initialize();
 
-		bool isInit();
-		int getBlockID(const Vector3& pos);
+	int get_block_id(const Vector3& pos);
 
-	private:
-		jclass
-			worldClientClass{ nullptr },
-			blockPosClass{ nullptr },
-			blockClass{ nullptr };
-		jmethodID
-			getBlockState{ nullptr },
-			getBlock{ nullptr },
-			blockPosConstructor{ nullptr },
-			getIDfromBlock{ nullptr };
-		jobject
-			worldInstance{ nullptr };
-
-		bool mInit{ false };
-		JNIEnv* env{ nullptr };
-		bool init(
-			JNIEnv* env,
-			const jclass& mcClass,
-			const jobject& mcClassInstance
-		);
-	};
+	inline bool init{ false };
 }

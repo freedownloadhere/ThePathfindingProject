@@ -2,13 +2,13 @@
 
 using namespace tpp;
 
-void AstarVector3::setG(double value)
+void AstarVector3::set_G(double value)
 {
 	this->G = value;
 	this->F = this->G + this->H;
 }
 
-void AstarVector3::setH(double value)
+void AstarVector3::set_H(double value)
 {
 	this->H = value;
 	this->F = this->G + this->H;

@@ -2,414 +2,153 @@
 
 using namespace tpp;
 
-Player::Player(
-	JNIEnv* env,
-	const jclass& mcClass,
-	const jobject& mcClassInstance
-)
+static Vector3 position{ 0, 0, 0 };
+static ViewAngles viewangles{ 0, 0 };
+static std::string inventory[36] = {};
+static jobjectArray inv_array{ nullptr };
+static INPUT lc_inputs[2], rc_inputs[2];
+
+bool player::initialize()
 {
-	this->mInit = this->init(
-		env, mcClass, mcClassInstance
+	inv_array = reinterpret_cast<jobjectArray>(
+		jni::get_obj("InventoryPlayer", "mainInventory")
 	);
 
-	if (!this->mInit)
-		std::cout << "	[-] An error occured while initializing Player\n";
-	else
-		std::cout << "[+] Successfully initialized Player\n";
-}
+	lc_inputs[0].type = INPUT_MOUSE;
+	lc_inputs[0].mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
+	lc_inputs[1].type = INPUT_MOUSE;
+	lc_inputs[1].mi.dwFlags = MOUSEEVENTF_LEFTUP;
 
-bool Player::init(
-	JNIEnv* env,
-	const jclass& mcClass,
-	const jobject& mcClassInstance
-)
-{
-	this->env = env;
-	this->mcClass = mcClass;
-	this->mcClassInstance = mcClassInstance;
+	rc_inputs[0].type = INPUT_MOUSE;
+	rc_inputs[0].mi.dwFlags = MOUSEEVENTF_RIGHTDOWN;
+	rc_inputs[1].type = INPUT_MOUSE;
+	rc_inputs[1].mi.dwFlags = MOUSEEVENTF_RIGHTUP;
 
-	this->EntityPlayerSPClass = tpp::getClass(this->env, "net/minecraft/client/entity/EntityPlayerSP");
-	if (this->EntityPlayerSPClass == nullptr)
-	{
-		std::cout << "[-] Failed to get class EntityPlayerSP\n";
-		return false;
-	}
+	update_pos();
+	update_inv();
 
-	jfieldID playerFieldID{ this->env->GetFieldID(mcClass, "field_71439_g", "Lnet/minecraft/client/entity/EntityPlayerSP;") };
-	if (playerFieldID == nullptr)
-	{
-		std::cout << "[-] Failed to get object field ID thePlayer\n";
-		return false;
-	}
-
-	this->mcThePlayerInstance = this->env->GetObjectField(mcClassInstance, playerFieldID);
-	if (this->mcThePlayerInstance == nullptr)
-	{
-		std::cout << "[-] Failed to get object field thePlayer\n";
-		std::cout << "[INFO] Are you currently in a world?\n";
-		std::cout << "[INFO] The player object cannot be fetched if not in-game.\n";
-		return false;
-	}
-
-	this->InventoryPlayerClass = tpp::getClass(this->env, "net/minecraft/entity/player/InventoryPlayer");
-	if (this->InventoryPlayerClass == nullptr)
-	{
-		std::cout << "[-] Failed to get class InventoryPlayer\n";
-		return false;
-	}
-
-	jfieldID inventoryID{ this->env->GetFieldID(EntityPlayerSPClass, "field_71071_by", "Lnet/minecraft/entity/player/InventoryPlayer;") };
-	if (inventoryID == nullptr)
-	{
-		std::cout << "[-] Failed to get inventory field ID!\n";
-		return false;
-	}
-
-	this->inventoryInstance = this->env->GetObjectField(mcThePlayerInstance, inventoryID);
-	if (inventoryInstance == nullptr)
-	{
-		std::cout << "[-] Failed to get object field inventory\n";
-		return false;
-	}
-
-	jfieldID mainInventoryFieldID = this->env->GetFieldID(this->InventoryPlayerClass, "field_70462_a", "[Lnet/minecraft/item/ItemStack;");
-	if (mainInventoryFieldID == nullptr)
-	{
-		std::cout << "[-] Could not get main inventory field ID\n";
-		return false;
-	}
-
-	jobject mainInventoryObj = this->env->GetObjectField(this->inventoryInstance, mainInventoryFieldID);
-	if (mainInventoryObj == nullptr)
-	{
-		std::cout << "[-] Could not get main inventory array object\n";
-		return false;
-	}
-
-	this->mainInventoryArray = static_cast<jobjectArray>(mainInventoryObj);
-
-	this->itemStackClass = tpp::getClass(this->env, "net/minecraft/item/ItemStack");
-	if (this->itemStackClass == nullptr)
-	{
-		std::cout << "[-] Could not find class itemStack\n";
-		return false;
-	}
-
-	this->displayNameGetter = this->env->GetMethodID(this->itemStackClass, "func_82833_r", "()Ljava/lang/String;");
-	if (this->displayNameGetter == nullptr)
-	{
-		std::cout << "[-] Could not get the display name getter method\n";
-		return false;
-	}
-
-	this->positionX = this->env->GetFieldID(this->EntityPlayerSPClass, "field_70165_t", "D");
-	if (this->positionX == nullptr)
-	{
-		std::cout << "[-] Could not get player X position field ID\n";
-		return false;
-	}
-
-	this->positionY = this->env->GetFieldID(this->EntityPlayerSPClass, "field_70163_u", "D");
-	if (this->positionY == nullptr)
-	{
-		std::cout << "[-] Could not get player Y position field ID\n";
-		return false;
-	}
-
-	this->positionZ = this->env->GetFieldID(this->EntityPlayerSPClass, "field_70161_v", "D");
-	if (this->positionZ == nullptr)
-	{
-		std::cout << "[-] Could not get player Z position field ID\n";
-		return false;
-	}
-
-	this->yawField = this->env->GetFieldID(this->EntityPlayerSPClass, "field_70177_z", "F");
-	if (this->yawField == nullptr)
-	{
-		std::cout << "[-] Could not get player yaw field\n";
-		return false;
-	}
-
-	this->pitchField = this->env->GetFieldID(this->EntityPlayerSPClass, "field_70125_A", "F");
-	if (this->pitchField == nullptr)
-	{
-		std::cout << "[-] Could not get player yaw field\n";
-		return false;
-	}
-
-	jclass movingObjectPositionClass = tpp::getClass(this->env, "net/minecraft/util/MovingObjectPosition");
-	if (movingObjectPositionClass == nullptr)
-	{
-		std::cout << "[-] Could not get the objectMouseOver class\n";
-		return false;
-	}
-
-	this->objectMouseOver = this->env->GetFieldID(this->mcClass, "field_71476_x", "Lnet/minecraft/util/MovingObjectPosition;");
-	if (objectMouseOver == nullptr)
-	{
-		std::cout << "[-] Could not get the objectMouseOver minecraft class field\n";
-		return false;
-	}
-
-	jclass blockPosClass = tpp::getClass(this->env, "net/minecraft/util/BlockPos");
-	if (blockPosClass == nullptr)
-	{
-		std::cout << "[-] Could not get block pos class\n";
-		return false;
-	}
-
-	this->getBlockPos = this->env->GetMethodID(movingObjectPositionClass, "func_178782_a", "()Lnet/minecraft/util/BlockPos;");
-	if (this->getBlockPos == nullptr)
-	{
-		std::cout << "[-] Could not get the getBlockPos method\n";
-		return false;
-	}
-
-	this->blockPosX = this->env->GetMethodID(blockPosClass, "func_177958_n", "()I");
-	if (this->blockPosX == nullptr)
-	{
-		std::cout << "[-] Could not get the getX block pos method\n";
-		return false;
-	}
-
-	this->blockPosY = this->env->GetMethodID(blockPosClass, "func_177956_o", "()I");
-	if (this->blockPosY == nullptr)
-	{
-		std::cout << "[-] Could not get the getY block pos method\n";
-		return false;
-	}
-
-	this->blockPosZ = this->env->GetMethodID(blockPosClass, "func_177952_p", "()I");
-	if (this->blockPosZ == nullptr)
-	{
-		std::cout << "[-] Could not get the getZ block pos method\n";
-		return false;
-	}
-
-	jclass entityClass = tpp::getClass(this->env, "net/minecraft/entity/Entity");
-	if (entityClass == nullptr)
-	{
-		std::cout << "[-] Could not get the Entity class\n";
-		return false;
-	}
-
-	this->setRotation = this->env->GetMethodID(entityClass, "func_70101_b", "(FF)V");
-	if (this->setRotation == nullptr)
-	{
-		std::cout << "[-] Could not get the setRotation method\n";
-		return false;
-	}
-
-	this->enumFacingClass = tpp::getClass(this->env, "net/minecraft/util/EnumFacing");
-	if (this->enumFacingClass == nullptr)
-	{
-		std::cout << "[-] Could not get the enumFacing class\n";
-		return false;
-	}
-
-	this->getHorizontalFacing = this->env->GetMethodID(this->EntityPlayerSPClass, "func_174811_aO", "()Lnet/minecraft/util/EnumFacing;");
-	if (this->getHorizontalFacing == nullptr)
-	{
-		std::cout << "[-] Could not get the getHorizontalFacing method\n";
-		return false;
-	}
-
-	this->getEnumFacingIndex = this->env->GetMethodID(this->enumFacingClass, "func_176745_a", "()I");
-	if (this->getEnumFacingIndex == nullptr)
-	{
-		std::cout << "[-] Could not get the enumfacing getIndex method\n";
-		return false;
-	}
-
-	Player::leftClickInput[0].type = INPUT_MOUSE;
-	Player::leftClickInput[0].mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
-	Player::leftClickInput[1].type = INPUT_MOUSE;
-	Player::leftClickInput[1].mi.dwFlags = MOUSEEVENTF_LEFTUP;
-
-	Player::rightClickInput[0].type = INPUT_MOUSE;
-	Player::rightClickInput[0].mi.dwFlags = MOUSEEVENTF_RIGHTDOWN;
-	Player::rightClickInput[1].type = INPUT_MOUSE;
-	Player::rightClickInput[1].mi.dwFlags = MOUSEEVENTF_RIGHTUP;
-
-	this->updatePosition();
-	this->updateMainInventory();
-
+	init = true;
 	return true;
 }
 
-void Player::updatePosition()
+void player::update_pos()
 {
-	this->position.x = (double)this->env->GetDoubleField(this->mcThePlayerInstance, this->positionX);
-	this->position.y = (double)this->env->GetDoubleField(this->mcThePlayerInstance, this->positionY);
-	this->position.z = (double)this->env->GetDoubleField(this->mcThePlayerInstance, this->positionZ);
+	position.x = jni::get_double("EntityPlayerSP", "posX");
+	position.y = jni::get_double("EntityPlayerSP", "posY");
+	position.z = jni::get_double("EntityPlayerSP", "posZ");
 }
 
-void Player::updateViewAngles()
+void player::update_viewangles()
 {
-	this->viewAngles.yaw = this->env->GetFloatField(this->mcThePlayerInstance, this->yawField);
-	this->viewAngles.pitch = this->env->GetFloatField(this->mcThePlayerInstance, this->pitchField);
-
-	this->viewAngles.yaw = tpp::clampAngle(this->viewAngles.yaw, -180, 180);
+	viewangles.yaw = clamp_angle(jni::get_float("EntityPlayerSP", "rotationYaw"), -180, 180);
+	viewangles.pitch = jni::get_float("EntityPlayerSP", "rotationPitch");
 }
 
-void Player::setViewAngles(const ViewAngles& newViewAngles)
+void player::set_viewangles(const ViewAngles& newViewAngles)
 {
-	this->env->CallVoidMethod(this->mcThePlayerInstance, this->setRotation, newViewAngles.yaw, newViewAngles.pitch);
+	jni::call_void("EntityPlayerSP", "setRotation", newViewAngles.yaw, newViewAngles.pitch);
 }
 
-ViewAngles Player::getViewAngles()
+ViewAngles player::get_viewangles()
 {
-	this->updateViewAngles();
-
-	return this->viewAngles;
+	update_viewangles();
+	return viewangles;
 }
 
-bool Player::isInit()
+void player::update_inv()
 {
-	return this->mInit;
-}
-
-void Player::updateMainInventory()
-{
-	jobject itemStackInSlot{ nullptr };
-	jstring itemName{ nullptr };
+	jobject itemstack_in_slot{ nullptr };
+	jstring item_name{ nullptr };
 
 	for (int index = 0; index < 36; ++index)
 	{
-		itemStackInSlot = this->env->GetObjectArrayElement(this->mainInventoryArray, index);
-		if (itemStackInSlot == nullptr)
+		itemstack_in_slot = env->GetObjectArrayElement(inv_array, index);
+		if (itemstack_in_slot == nullptr)
 		{
-			this->inventory[index] = "Air";
+			inventory[index] = "Air";
 			continue;
 		}
 
-		itemName = static_cast<jstring>(this->env->CallObjectMethod(itemStackInSlot, displayNameGetter));
+		item_name = jni::call_str(itemstack_in_slot, "ItemStack", "getDisplayName");
 
-		this->inventory[index] = this->env->GetStringUTFChars(itemName, 0);
+		inventory[index] = env->GetStringUTFChars(item_name, 0);
 	}
 }
 
-std::string Player::getItem(int index)
+std::string player::get_item(int index)
 {
-	if (!this->mInit)
-	{
-		std::cout << "The player object was not initialized properly\n";
-		return "";
-	}
-
-	if (index >= 0 and index < 36)
-		return this->inventory[index];
-	else
-		return "";
+	update_inv();
+	return (index >= 0 && index < 36 ? inventory[index] : "Invalid index");
 }
 
-std::string Player::updateAndGetItem(int index)
+Vector3 player::get_lookingat()
 {
-	if (!this->mInit)
-	{
-		std::cout << "The player object was not initialized properly\n";
-		return "";
-	}
-
-	this->updateMainInventory();
-
-	if (index >= 0 and index < 36)
-		return this->inventory[index];
-	else
-		return "";
-}
-
-Vector3 Player::getLookingAt()
-{
-	jobject mouseOverInstance{ nullptr };
-	jobject blockPos{ nullptr };
+	jobject block_pos{ nullptr };
 	Vector3 pos{ 0, 0, 0 };
 
-	mouseOverInstance = this->env->GetObjectField(this->mcClassInstance, this->objectMouseOver);
-	if (mouseOverInstance == nullptr)
-	{
-		std::cout << "Could not get the objMouseOver instance\n";
-		return pos;
-	}
-
-	blockPos = this->env->CallObjectMethod(mouseOverInstance, this->getBlockPos);
-	if (blockPos == nullptr)
+	block_pos = jni::call_obj("MovingObjectPosition", "getBlockPos");
+	if (block_pos == nullptr)
 	{
 		std::cout << "Could not get the block position the player is looking at\n";
 		return pos;
 	}
 
-	pos.x = this->env->CallIntMethod(blockPos, this->blockPosX);
-	pos.y = this->env->CallIntMethod(blockPos, this->blockPosY);
-	pos.z = this->env->CallIntMethod(blockPos, this->blockPosZ);
+	pos.x = jni::call_int(block_pos, "BlockPos", "getX");
+	pos.y = jni::call_int(block_pos, "BlockPos", "getY");
+	pos.z = jni::call_int(block_pos, "BlockPos", "getZ");
 
 	return pos;
 }
 
-EnumFacing Player::getFacing()
+EnumFacing player::get_facing()
 {
 	jobject facing{ nullptr };
 	int index = 0;
 
-	facing = this->env->CallObjectMethod(this->mcThePlayerInstance, this->getHorizontalFacing);
+	facing = jni::call_obj("EntityPlayerSP", "getHorizontalFacing");
 	if (facing == nullptr)
 	{
 		std::cout << "Could not get the direction the player is facing\n";
 		return EnumFacing::DOWN;
 	}
 
-	index = this->env->CallIntMethod(facing, this->getEnumFacingIndex);
-	if (index == 0)
-		std::cout << "Invalid horizontal enumfacing index\n";
+	index = jni::call_int(facing, "EnumFacing", "getIndex");
+	if (index == 0) std::cout << "Invalid horizontal enumfacing index\n";
 
 	return (EnumFacing)index;
 }
 
-Vector3 Player::getBlockBelowPosition()
+Vector3 player::get_below_pos()
 {
-	this->updatePosition();
-
-	Vector3 result(this->position.x, this->position.y - 1, this->position.z);
+	update_pos();
+	Vector3 result(position.x, position.y - 1, position.z);
 	result.truncate2();
-
 	return result;
 }
 
-Vector3 Player::getFootPosition()
+Vector3 player::get_foot_pos()
 {
-	this->updatePosition();
-
-	return this->position;
+	update_pos();
+	return position;
 }
 
-Vector3 Player::getHeadPosition()
+Vector3 player::get_head_pos()
 {
-	this->updatePosition();
-
-	Vector3 result(this->position.x, this->position.y + 1, this->position.z);
+	update_pos();
+	Vector3 result(position.x, position.y + 1, position.z);
 	return result;
 }
 
-void Player::leftClick()
+void player::left_click()
 {
-	SendInput(1, &Player::leftClickInput[0], sizeof(INPUT));
+	SendInput(1, &lc_inputs[0], sizeof(INPUT));
 	std::this_thread::sleep_for(std::chrono::milliseconds(100));
-	SendInput(1, &Player::leftClickInput[1], sizeof(INPUT));
+	SendInput(1, &lc_inputs[1], sizeof(INPUT));
 }
 
-void Player::rightClick()
+void player::right_click()
 {
-	SendInput(1, &Player::rightClickInput[0], sizeof(INPUT));
+	SendInput(1, &rc_inputs[0], sizeof(INPUT));
 	std::this_thread::sleep_for(std::chrono::milliseconds(100));
-	SendInput(1, &Player::rightClickInput[1], sizeof(INPUT));
-}
-
-jclass Player::getEntityPlayerSPClass()
-{
-	return this->EntityPlayerSPClass;
-}
-
-jobject Player::getMcThePlayerInstance()
-{
-	return this->mcThePlayerInstance;
+	SendInput(1, &rc_inputs[1], sizeof(INPUT));
 }

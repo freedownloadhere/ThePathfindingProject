@@ -12,7 +12,7 @@ Vector3::Vector3(double x, double y, double z) : x(x), y(y), z(z)
 
 }
 
-double Vector3::euclideanDistance(const Vector3& pos1, const Vector3& pos2)
+double Vector3::euclidean_distance(const Vector3& pos1, const Vector3& pos2)
 {
 	return
 		sqrt(
@@ -22,12 +22,12 @@ double Vector3::euclideanDistance(const Vector3& pos1, const Vector3& pos2)
 		);
 }
 
-double Vector3::manhattanDistance(const Vector3& pos1, const Vector3& pos2)
+double Vector3::manhattan_distance(const Vector3& pos1, const Vector3& pos2)
 {
 	return abs(pos1.x - pos2.x) + abs(pos1.y - pos2.y) + abs(pos1.z - pos2.z);
 }
 
-Vector3 Vector3::manhattanDistanceVector(const Vector3& pos1, const Vector3& pos2)
+Vector3 Vector3::manhattan_distance_vec(const Vector3& pos1, const Vector3& pos2)
 {
 	return Vector3(
 		abs(pos1.x - pos2.x),
@@ -81,7 +81,7 @@ std::ostream& tpp::operator<<(std::ostream& os, const Vector3& vector)
 	return os;
 }
 
-std::string Vector3::toString() const
+std::string Vector3::to_string() const
 {
 	return{ std::to_string((int)this->x) + " " + std::to_string((int)this->y) + " " + std::to_string((int)this->z) };
 }

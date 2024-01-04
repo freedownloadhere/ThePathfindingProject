@@ -3,52 +3,49 @@
 using namespace tpp;
 using namespace std::literals::chrono_literals;
 
-Instance::Instance()
+bool instance::initialize()
 {
 	std::cout << "================ (Start of initialization) ================\n\n";
 
-	this->mInit = this->init();
+	auto r1 = jni::initialize();
+	if (r1 != jni::OK) { std::cerr << "[-] JNI did not initialize (" << r1 << ")\n"; return false; }
+	else std::cout << "[+] JNI was initialized\n";
+
+	auto r2 = minecraft::initialize();
+	if (r2 != minecraft::OK) { std::cerr << "[-] Minecraft did not initialize (" << r2 << ")\n"; return false; }
+	else std::cout << "[+] Minecraft was initialized\n";
+
+	auto r3 = pathfinder::initialize();
+	if (r3 != true) { std::cerr << "[-] Pathfinder did not initialize\n"; return false; }
+	else std::cout << "[+] Pathfinder was initialized\n";
+
+	auto r4 = hooks::init();
+	if (r4 != true) { std::cerr << "[-] The hooks are not initialized\n"; return false; }
+	else std::cout << "[+] The hooks are initialized\n";
 
 	std::cout << "\n===================== (Client status) =====================\n\n";
-
-	if (!this->mInit)
-		std::cout << "[-] Status: not initialized\n";
-	else
-		std::cout << "[+] Status: initialized\n";
+	std::cout << "[+] Status: initialized\n";
 	std::cout << "\n================= (End of initialization) =================\n\n";
-
-	if (this->mInit)
-	{
-		std::cout << "[Welcome] Welcome to The Pathfinding Project!\n";
-		std::cout << "This project is made by FreeDownloadHere, with passion and love :)\n";
-		std::cout << "Keep in mind this is still in its early stages and prone to bugs.\n";
-		std::cout << "Make sure to report any issues on the Github repo!\n";
-		std::cout << "\n===================== (Command input) =====================\n\n";
-	}
-}
-
-bool Instance::init()
-{
-	this->minecraft = std::make_shared<Minecraft>();
-	if (this->minecraft == nullptr || !this->minecraft->isInit())
-		return false;
-
-	this->pathfinder = std::make_unique<Pathfinder>(this->minecraft);
-	if (this->pathfinder == nullptr || !this->pathfinder->isInit())
-		return false;
 
 	return true;
 }
 
-bool Instance::isInit()
-{
-	return this->mInit;
-}
-
-void Instance::run()
+void instance::run()
 {
 	while (!GetAsyncKeyState(VK_NUMPAD0))
 	{
-		std::this_thread::sleep_for(200ms);
+		if (pathfinder::state->should_run)
+		{
+			pathfinder::make_path();
+			pathfinder::state->should_run = false;
+		}
+
+		std::this_thread::sleep_for(500ms);
 	}
+}
+
+void instance::exit()
+{
+	gui::destroy();
+	hooks::destroy();
 }
