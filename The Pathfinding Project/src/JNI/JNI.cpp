@@ -2,7 +2,53 @@
 
 using namespace tpp;
 
-const uint8_t data[3714] = {
+static nlohmann::json mappings;
+
+static jclass get_class(const std::string& path)
+{
+	static std::unordered_map<std::string, jclass> classMap;
+
+	if (classMap.empty())
+	{
+		JavaVM* jvm = nullptr;
+		env->GetJavaVM(&jvm);
+		jvmtiEnv* tienv = nullptr;
+		jvm->GetEnv((void**)&tienv, JVMTI_VERSION_1_2);
+		jint classCount = 0;
+		jclass* classes = nullptr;
+		tienv->GetLoadedClasses(&classCount, &classes);
+		jclass ClassClass = env->FindClass("java/lang/Class");
+		jmethodID getName = env->GetMethodID(ClassClass, "getName", "()Ljava/lang/String;");
+
+		for (int i = 0; i < classCount; ++i)
+		{
+			jstring name = (jstring)env->CallObjectMethod(classes[i], getName);
+			const char* chars = env->GetStringUTFChars(name, nullptr);
+			jsize size = env->GetStringUTFLength(name);
+			std::string className(chars, size);
+			env->ReleaseStringUTFChars(name, chars);
+			for (char& character : className)
+			{
+				if (character == '.') character = '/';
+			}
+			classMap.insert({ className, classes[i] });
+		}
+		tienv->Deallocate((unsigned char*)classes);
+	}
+
+	jclass foundclass = nullptr;
+
+	if (!classMap.contains(path))
+		return nullptr;
+	
+	foundclass = classMap.at(path);
+	return foundclass;
+}
+
+jni::result jni::initialize()
+{
+	JavaVM* jvm{ nullptr };
+	const uint8_t data[3714] = {
 	0x7B, 0x22, 0x6E, 0x65, 0x74, 0x2F, 0x6D, 0x69, 0x6E, 0x65, 0x63, 0x72, 0x61, 0x66, 0x74, 0x2F,
 	0x63, 0x6C, 0x69, 0x65, 0x6E, 0x74, 0x2F, 0x4D, 0x69, 0x6E, 0x65, 0x63, 0x72, 0x61, 0x66, 0x74,
 	0x22, 0x3A, 0x7B, 0x22, 0x6E, 0x61, 0x6D, 0x65, 0x22, 0x3A, 0x22, 0x4D, 0x69, 0x6E, 0x65, 0x63,
@@ -236,53 +282,7 @@ const uint8_t data[3714] = {
 	0x28, 0x29, 0x4C, 0x6E, 0x65, 0x74, 0x2F, 0x6D, 0x69, 0x6E, 0x65, 0x63, 0x72, 0x61, 0x66, 0x74,
 	0x2F, 0x62, 0x6C, 0x6F, 0x63, 0x6B, 0x2F, 0x42, 0x6C, 0x6F, 0x63, 0x6B, 0x3B, 0x22, 0x7D, 0x5D,
 	0x7D, 0x7D
-};
-static nlohmann::json mappings;
-
-static jclass get_class(const std::string& path)
-{
-	static std::unordered_map<std::string, jclass> classMap;
-
-	if (classMap.empty())
-	{
-		JavaVM* jvm = nullptr;
-		env->GetJavaVM(&jvm);
-		jvmtiEnv* tienv = nullptr;
-		jvm->GetEnv((void**)&tienv, JVMTI_VERSION_1_2);
-		jint classCount = 0;
-		jclass* classes = nullptr;
-		tienv->GetLoadedClasses(&classCount, &classes);
-		jclass ClassClass = env->FindClass("java/lang/Class");
-		jmethodID getName = env->GetMethodID(ClassClass, "getName", "()Ljava/lang/String;");
-
-		for (int i = 0; i < classCount; ++i)
-		{
-			jstring name = (jstring)env->CallObjectMethod(classes[i], getName);
-			const char* chars = env->GetStringUTFChars(name, nullptr);
-			jsize size = env->GetStringUTFLength(name);
-			std::string className(chars, size);
-			env->ReleaseStringUTFChars(name, chars);
-			for (char& character : className)
-			{
-				if (character == '.') character = '/';
-			}
-			classMap.insert({ className, classes[i] });
-		}
-		tienv->Deallocate((unsigned char*)classes);
-	}
-
-	jclass foundclass = nullptr;
-
-	if (!classMap.contains(path))
-		return nullptr;
-	
-	foundclass = classMap.at(path);
-	return foundclass;
-}
-
-jni::result jni::initialize()
-{
-	JavaVM* jvm{ nullptr };
+	};
 
 	if (JNI_GetCreatedJavaVMs(&jvm, 1, nullptr) != 0)
 		return GET_VM_FAILED;
@@ -299,7 +299,10 @@ jni::result jni::initialize()
 		class_map[cls_name] = get_class(cls.key());
 
 		if (class_map[cls_name] == nullptr)
+		{
+			std::cerr << "[-] Failed to get class " + cls_name + "\n";
 			return GET_CLASS_FAILED;
+		}
 
 		for (const auto& fld : cls.value().at("fields"))
 		{
@@ -373,7 +376,7 @@ jni::result jni::initialize()
 	return OK;
 }
 
-void debug_dump()
+void tpp::jni::debug_dump()
 {
 	for (const auto& i : jni::class_map)
 	{

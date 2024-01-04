@@ -93,7 +93,7 @@ bool tpp::pathfinder::make_path(Vector3 start, Vector3 target, int flags, const 
 		return false;
 	}
 
-	if (flags & (int)MakePathFlags::SAFE)
+	if (flags & tpp::makepathflags::SAFE)
 	{
 		while
 			(
@@ -122,17 +122,20 @@ bool tpp::pathfinder::make_path(Vector3 start, Vector3 target, int flags, const 
 		return false;
 	}
 
-	if (!(flags & (int)MakePathFlags::USEPREVCACHE))
+	if (!(flags & tpp::makepathflags::USEPREVCACHE))
 		block_cache.clear();
 
+	std::cout << "[make_path] Starting the pathfinding...\n";
 	std::list<Vector3> path = default_astar(start, target);
+	std::cout << "[make_path] Pathfinding is done.\n";
+
 	if (path.empty())
 	{
 		std::cout << "[make_path] Failed to make a path to " << target << ".\n";
 		return false;
 	}
 
-	if (flags & (int)MakePathFlags::SETBLOCK)
+	if (flags & tpp::makepathflags::SETBLOCK)
 	{
 		for (const auto& i : path)
 		{
@@ -158,6 +161,8 @@ bool tpp::pathfinder::go_to(Vector3 target, int flags, const std::string& blockT
 
 std::list<Vector3> tpp::pathfinder::default_astar(const Vector3& start, const Vector3& target)
 {
+	std::list<Vector3> result;
+
 	std::vector<AstarVector3> search_heap;
 	search_heap.reserve(500);
 
@@ -179,8 +184,6 @@ std::list<Vector3> tpp::pathfinder::default_astar(const Vector3& start, const Ve
 
 		if (current == target)
 		{
-			std::list<Vector3> result;
-
 			while (current != start)
 			{
 				result.emplace_front(current.x, current.y, current.z);
@@ -217,6 +220,11 @@ std::list<Vector3> tpp::pathfinder::default_astar(const Vector3& start, const Ve
 		}
 	}
 
+	return {};
+}
+
+std::list<Vector3> tpp::pathfinder::try_straight_path(const Vector3& start, const Vector3& target)
+{
 	return {};
 }
 

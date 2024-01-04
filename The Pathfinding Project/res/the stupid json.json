@@ -1,0 +1,260 @@
+{
+    "net/minecraft/client/Minecraft": {
+        "name": "Minecraft",
+        "fields": [
+            {
+                "name": "thePlayer",
+                "obf": "field_71439_g",
+                "sig": "Lnet/minecraft/client/entity/EntityPlayerSP;"
+            },
+            {
+                "name": "theMinecraft",
+                "obf": "field_71432_P",
+                "sig": "Lnet/minecraft/client/Minecraft;",
+                "static": true
+            },
+            {
+                "name": "theWorld",
+                "obf": "field_71441_e",
+                "sig": "Lnet/minecraft/client/multiplayer/WorldClient;"
+            },
+            {
+                "name": "ingameGUI",
+                "obf": "field_71456_v",
+                "sig": "Lnet/minecraft/client/gui/GuiIngame;"
+            },
+            {
+                "name": "objectMouseOver",
+                "obf": "field_71476_x",
+                "sig": "Lnet/minecraft/util/MovingObjectPosition;"
+            }
+        ],
+        "methods": []
+    },
+    "net/minecraft/client/entity/EntityPlayerSP": {
+        "name": "EntityPlayerSP",
+        "fields": [
+            {
+                "name": "posX",
+                "obf": "field_70165_t",
+                "sig": "D"
+            },
+            {
+                "name": "posY",
+                "obf": "field_70163_u",
+                "sig": "D"
+            },
+            {
+                "name": "posZ",
+                "obf": "field_70161_v",
+                "sig": "D"
+            },
+            {
+                "name": "rotationYaw",
+                "obf": "field_70177_z",
+                "sig": "F"
+            },
+            {
+                "name": "rotationPitch",
+                "obf": "field_70125_A",
+                "sig": "F"
+            },
+            {
+                "name": "inventory",
+                "obf": "field_71071_by",
+                "sig": "Lnet/minecraft/entity/player/InventoryPlayer;"
+            }
+        ],
+        "methods": [
+            {
+                "name": "getHorizontalFacing",
+                "obf": "func_174811_aO",
+                "sig": "()Lnet/minecraft/util/EnumFacing;"
+            },
+            {
+                "name": "addChatMessage",
+                "obf": "func_145747_a",
+                "sig": "(Lnet/minecraft/util/IChatComponent;)V"
+            },
+            {
+                "name": "sendChatMessage",
+                "obf": "func_71165_d",
+                "sig": "(Ljava/lang/String;)V"
+            },
+            {
+                "name": "setRotation",
+                "obf": "func_70101_b",
+                "sig": "(FF)V"
+            }
+        ]
+    },
+    "net/minecraft/entity/player/InventoryPlayer": {
+        "name": "InventoryPlayer",
+        "fields": [
+            {
+                "name": "mainInventory",
+                "obf": "field_70462_a",
+                "sig": "[Lnet/minecraft/item/ItemStack;"
+            }
+        ],
+        "methods": []
+    },
+    "net/minecraft/item/ItemStack": {
+        "name": "ItemStack",
+        "fields": [],
+        "methods": [
+            {
+                "name": "getDisplayName",
+                "obf": "func_82833_r",
+                "sig": "()Ljava/lang/String;"
+            }
+        ]
+    },
+    "net/minecraft/util/MovingObjectPosition": {
+        "name": "MovingObjectPosition",
+        "fields": [],
+        "methods": [
+            {
+                "name": "getBlockPos",
+                "obf": "func_178782_a",
+                "sig": "()Lnet/minecraft/util/BlockPos;"
+            }
+        ]
+    },
+    "net/minecraft/util/BlockPos": {
+        "name": "BlockPos",
+        "fields": [],
+        "methods": [
+            {
+                "name": "<init>",
+                "obf": "<init>",
+                "sig": "(DDD)V"
+            },
+            {
+                "name": "getX",
+                "obf": "func_177958_n",
+                "sig": "()I"
+            },
+            {
+                "name": "getY",
+                "obf": "func_177956_o",
+                "sig": "()I"
+            },
+            {
+                "name": "getZ",
+                "obf": "func_177952_p",
+                "sig": "()I"
+            }
+        ]
+    },
+    "net/minecraft/util/EnumFacing": {
+        "name": "EnumFacing",
+        "fields": [],
+        "methods": [
+            {
+                "name": "getIndex",
+                "obf": "func_176745_a",
+                "sig": "()I"
+            }
+        ]
+    },
+    "net/minecraft/util/ChatComponentText": {
+        "name": "ChatComponentText",
+        "fields": [],
+        "methods": [
+            {
+                "name": "<init>",
+                "obf": "<init>",
+                "sig": "(Ljava/lang/String;)V"
+            },
+            {
+                "name": "getUnformattedText",
+                "obf": "func_150260_c",
+                "sig": "()Ljava/lang/String;"
+            }
+        ]
+    },
+    "net/minecraft/client/gui/GuiIngame": {
+        "name": "GuiIngame",
+        "fields": [
+            {
+                "name": "persistantChatGUI",
+                "obf": "field_73840_e",
+                "sig": "Lnet/minecraft/client/gui/GuiNewChat;"
+            }
+        ],
+        "methods": []
+    },
+    "net/minecraft/client/gui/GuiNewChat": {
+        "name": "GuiNewChat",
+        "fields": [
+            {
+                "name": "chatLines",
+                "obf": "field_146252_h",
+                "sig": "Ljava/util/List;"
+            }
+        ],
+        "methods": []
+    },
+    "net/minecraft/client/gui/ChatLine": {
+        "name": "ChatLine",
+        "fields": [],
+        "methods": [
+            {
+                "name": "getChatComponent",
+                "obf": "func_151461_a",
+                "sig": "()Lnet/minecraft/util/IChatComponent;"
+            }
+        ]
+    },
+    "java/util/List": {
+        "name": "List",
+        "fields": [],
+        "methods": [
+            {
+                "name": "get",
+                "obf": "get",
+                "sig": "(I)Ljava/lang/Object;"
+            },
+            {
+                "name": "size",
+                "obf": "size",
+                "sig": "()I"
+            }
+        ]
+    },
+    "net/minecraft/client/multiplayer/WorldClient": {
+        "name": "WorldClient",
+        "fields": [],
+        "methods": [
+            {
+                "name": "getBlockState",
+                "obf": "func_180495_p",
+                "sig": "(Lnet/minecraft/util/BlockPos;)Lnet/minecraft/block/state/IBlockState;"
+            }
+        ]
+    },
+    "net/minecraft/block/Block": {
+        "name": "Block",
+        "fields": [],
+        "methods": [
+            {
+                "name": "getIdFromBlock",
+                "obf": "func_149682_b",
+                "sig": "(Lnet/minecraft/block/Block;)I",
+                "static": true
+            }
+        ]
+    },
+    "net/minecraft/block/state/IBlockState": {
+        "name": "IBlockState",
+        "fields": [],
+        "methods": [
+            {
+                "name": "getBlock",
+                "obf": "func_177230_c",
+                "sig": "()Lnet/minecraft/block/Block;"
+            }
+        ]
+    }
+}

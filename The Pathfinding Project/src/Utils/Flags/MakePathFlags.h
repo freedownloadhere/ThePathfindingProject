@@ -1,8 +1,8 @@
 #pragma once
 
-namespace tpp
+namespace tpp::makepathflags
 {
-	enum class MakePathFlags
+	enum MakePathFlags
 	{
 		NONE = 0,
 		SETBLOCK = 1,

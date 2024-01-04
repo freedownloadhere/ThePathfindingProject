@@ -95,7 +95,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)The Pathfinding Project\dependencies\include;$(SolutionDir)The Pathfinding Project\dependencies\include\win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)$(ProjectName)\dependencies\include\jni\win32;$(SolutionDir)$(ProjectName)\dependencies\include\jni;$(SolutionDir)$(ProjectName)\dependencies\include\imgui;$(SolutionDir)$(ProjectName)\dependencies\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -103,7 +103,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>$(SolutionDir)The Pathfinding Project\dependencies\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);jvm.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);jvm.lib;libMinHook-x64.lib;opengl32.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -117,7 +117,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)The Pathfinding Project\dependencies\include;$(SolutionDir)The Pathfinding Project\dependencies\include\win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)$(ProjectName)\dependencies\include\jni\win32;$(SolutionDir)$(ProjectName)\dependencies\include\jni;$(SolutionDir)$(ProjectName)\dependencies\include\imgui;$(SolutionDir)$(ProjectName)\dependencies\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -127,7 +127,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>$(SolutionDir)The Pathfinding Project\dependencies\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);jvm.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);jvm.lib;libMinHook-x64.lib;opengl32.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -139,7 +139,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)The Pathfinding Project\dependencies\include;$(SolutionDir)The Pathfinding Project\dependencies\include\win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)$(ProjectName)\dependencies\include\jni\win32;$(SolutionDir)$(ProjectName)\dependencies\include\jni;$(SolutionDir)$(ProjectName)\dependencies\include\imgui;$(SolutionDir)$(ProjectName)\dependencies\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -147,7 +147,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>$(SolutionDir)The Pathfinding Project\dependencies\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);jvm.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);jvm.lib;libMinHook-x64.lib;opengl32.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -161,7 +161,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)The Pathfinding Project\dependencies\include;$(SolutionDir)The Pathfinding Project\dependencies\include\win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)$(ProjectName)\dependencies\include\jni\win32;$(SolutionDir)$(ProjectName)\dependencies\include\jni;$(SolutionDir)$(ProjectName)\dependencies\include\imgui;$(SolutionDir)$(ProjectName)\dependencies\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -171,10 +171,34 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>$(SolutionDir)The Pathfinding Project\dependencies\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);jvm.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);jvm.lib;libMinHook-x64.lib;opengl32.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="dependencies\include\imgui\imconfig.h" />
+    <ClInclude Include="dependencies\include\imgui\imgui.h" />
+    <ClInclude Include="dependencies\include\imgui\imgui_impl_opengl3.h" />
+    <ClInclude Include="dependencies\include\imgui\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="dependencies\include\imgui\imgui_impl_win32.h" />
+    <ClInclude Include="dependencies\include\imgui\imgui_internal.h" />
+    <ClInclude Include="dependencies\include\imgui\imstb_rectpack.h" />
+    <ClInclude Include="dependencies\include\imgui\imstb_textedit.h" />
+    <ClInclude Include="dependencies\include\imgui\imstb_truetype.h" />
+    <ClInclude Include="dependencies\include\jni\classfile_constants.h" />
+    <ClInclude Include="dependencies\include\jni\jawt.h" />
+    <ClInclude Include="dependencies\include\jni\jdwpTransport.h" />
+    <ClInclude Include="dependencies\include\jni\jni.h" />
+    <ClInclude Include="dependencies\include\jni\jvmti.h" />
+    <ClInclude Include="dependencies\include\jni\jvmticmlr.h" />
+    <ClInclude Include="dependencies\include\jni\win32\bridge\AccessBridgeCallbacks.h" />
+    <ClInclude Include="dependencies\include\jni\win32\bridge\AccessBridgeCalls.h" />
+    <ClInclude Include="dependencies\include\jni\win32\bridge\AccessBridgePackages.h" />
+    <ClInclude Include="dependencies\include\jni\win32\jawt_md.h" />
+    <ClInclude Include="dependencies\include\jni\win32\jni_md.h" />
+    <ClInclude Include="dependencies\include\json.hpp" />
+    <ClInclude Include="dependencies\include\MinHook.h" />
+    <ClInclude Include="src\GUI\GUI.h" />
+    <ClInclude Include="src\Hooks\Hooks.h" />
     <ClInclude Include="src\Instance\Instance.h" />
     <ClInclude Include="src\JNI\JNI.h" />
     <ClInclude Include="src\Minecraft\Chat\Chat.h" />
@@ -193,7 +217,16 @@
     <ClInclude Include="src\ViewAngles\ViewAngles.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\dllmain.cpp" />
+    <ClCompile Include="dependencies\include\imgui\imgui.cpp" />
+    <ClCompile Include="dependencies\include\imgui\imgui_demo.cpp" />
+    <ClCompile Include="dependencies\include\imgui\imgui_draw.cpp" />
+    <ClCompile Include="dependencies\include\imgui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="dependencies\include\imgui\imgui_impl_win32.cpp" />
+    <ClCompile Include="dependencies\include\imgui\imgui_tables.cpp" />
+    <ClCompile Include="dependencies\include\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="src\GUI\GUI.cpp" />
+    <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\Hooks\Hooks.cpp" />
     <ClCompile Include="src\Instance\Instance.cpp" />
     <ClCompile Include="src\JNI\JNI.cpp" />
     <ClCompile Include="src\Minecraft\Chat\Chat.cpp" />

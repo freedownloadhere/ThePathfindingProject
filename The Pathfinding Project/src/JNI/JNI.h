@@ -1,12 +1,12 @@
 #pragma once
 
-#include <jni.h>
-#include <jvmti.h>
+#include "jni/jni.h"
+#include "jni/jvmti.h"
+#include "json.hpp"
+
 #include <unordered_map>
 #include <string>
 #include <iostream>
-
-#include "json.hpp"
 
 namespace tpp
 {
@@ -24,6 +24,8 @@ namespace tpp::jni
 		GET_FIELD_FAILED = 4,
 		GET_METHOD_FAILED = 5
 	};
+
+	void debug_dump();
 
 	inline std::unordered_map<std::string, jclass> class_map;
 	inline std::unordered_map<std::string, std::unordered_map<std::string, jmethodID>> method_map;
