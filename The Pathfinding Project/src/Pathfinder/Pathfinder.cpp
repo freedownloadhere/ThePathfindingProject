@@ -51,6 +51,7 @@ static std::unordered_map<Vector3, bool> block_cache;
 
 bool tpp::pathfinder::initialize()
 {
+	state = std::make_unique<state_struct>();
 	init = true;
 	return true;
 }
@@ -79,68 +80,68 @@ bool tpp::pathfinder::is_walkable(const AstarVector3& coordinates)
 	return block_cache[v[0]] && !block_cache[v[1]] && !block_cache[v[2]];
 }
 
-bool tpp::pathfinder::make_path(Vector3 start, Vector3 target, int flags, const std::string& blockToSet)
+bool tpp::pathfinder::make_path()
 {
-	if (start.y < 0)
+	if (state->start.y < 0)
 	{
-		std::cout << "[make_path] Invalid start block " << start << "\n";
+		std::cout << "[make_path] Invalid start block " << state->start << "\n";
 		return false;
 	}
 
-	if (target.y < 0)
+	if (state->target.y < 0)
 	{
-		std::cout << "[make_path] Invalid target block " << target << "\n";
+		std::cout << "[make_path] Invalid target block " << state->target << "\n";
 		return false;
 	}
 
-	if (flags & tpp::makepathflags::SAFE)
+	if (state->flags & tpp::makepathflags::SAFE)
 	{
 		while
 			(
-				start.y >= 0 &&
-				Block::nonsolid.contains(tpp::world::get_block_id(start))
+				state->start.y >= 0 &&
+				Block::nonsolid.contains(tpp::world::get_block_id(state->start))
 				)
-			start.y--;
+			state->start.y--;
 
 		while
 			(
-				target.y >= 0 &&
-				Block::nonsolid.contains(tpp::world::get_block_id(target))
+				state->target.y >= 0 &&
+				Block::nonsolid.contains(tpp::world::get_block_id(state->target))
 				)
-			target.y--;
+			state->target.y--;
 	}
 
-	if (start.y < 0)
+	if (state->start.y < 0)
 	{
 		std::cout << "[make_path] Could not find a valid (solid) start block!\n";
 		return false;
 	}
 
-	if (target.y < 0)
+	if (state->target.y < 0)
 	{
 		std::cout << "[make_path] Could not find a valid (solid) target block!\n";
 		return false;
 	}
 
-	if (!(flags & tpp::makepathflags::USEPREVCACHE))
+	if (!(state->flags & tpp::makepathflags::USEPREVCACHE))
 		block_cache.clear();
 
 	std::cout << "[make_path] Starting the pathfinding...\n";
-	std::list<Vector3> path = default_astar(start, target);
+	std::list<Vector3> path = default_astar();
 	std::cout << "[make_path] Pathfinding is done.\n";
 
 	if (path.empty())
 	{
-		std::cout << "[make_path] Failed to make a path to " << target << ".\n";
+		std::cout << "[make_path] Failed to make a path to " << state->target << ".\n";
 		return false;
 	}
 
-	if (flags & tpp::makepathflags::SETBLOCK)
+	if (state->flags & tpp::makepathflags::SETBLOCK)
 	{
 		for (const auto& i : path)
 		{
 			tpp::chat::send_msg_from_player(
-				"/setblock " + std::to_string(i.x) + " " + std::to_string(i.y) + " " + std::to_string(i.z) + " " + blockToSet
+				"/setblock " + std::to_string(i.x) + " " + std::to_string(i.y) + " " + std::to_string(i.z) + " " + state->block_to_set
 			);
 			std::this_thread::sleep_for(10ms);
 		}
@@ -149,17 +150,7 @@ bool tpp::pathfinder::make_path(Vector3 start, Vector3 target, int flags, const 
 	return true;
 }
 
-bool tpp::pathfinder::go_to(Vector3 target, int flags, const std::string& blockToSet)
-{
-	return make_path(
-		tpp::player::get_below_pos(), 
-		target, 
-		flags, 
-		blockToSet
-	);
-}
-
-std::list<Vector3> tpp::pathfinder::default_astar(const Vector3& start, const Vector3& target)
+std::list<Vector3> tpp::pathfinder::default_astar()
 {
 	std::list<Vector3> result;
 
@@ -169,9 +160,9 @@ std::list<Vector3> tpp::pathfinder::default_astar(const Vector3& start, const Ve
 	std::unordered_set<Vector3> processed;
 	std::unordered_map<AstarVector3, AstarVector3> connections;
 
-	AstarVector3 current{ start };
+	AstarVector3 current{ state->start };
 	current.set_G(0);
-	current.set_H(Vector3::manhattan_distance(current, target));
+	current.set_H(Vector3::manhattan_distance(current, state->target));
 
 	search_heap.emplace_back(current);
 
@@ -182,9 +173,9 @@ std::list<Vector3> tpp::pathfinder::default_astar(const Vector3& start, const Ve
 		search_heap.pop_back();
 		processed.insert(current);
 
-		if (current == target)
+		if (current == state->target)
 		{
-			while (current != start)
+			while (current != state->start)
 			{
 				result.emplace_front(current.x, current.y, current.z);
 				current = connections[current];
@@ -213,7 +204,7 @@ std::list<Vector3> tpp::pathfinder::default_astar(const Vector3& start, const Ve
 
 			if (!list_contains(next, search_heap))
 			{
-				next.set_H(Vector3::manhattan_distance(current, target));
+				next.set_H(Vector3::manhattan_distance(current, state->target));
 				search_heap.emplace_back(next);
 				std::push_heap(search_heap.begin(), search_heap.end(), AstarVector3());
 			}
@@ -223,7 +214,7 @@ std::list<Vector3> tpp::pathfinder::default_astar(const Vector3& start, const Ve
 	return {};
 }
 
-std::list<Vector3> tpp::pathfinder::try_straight_path(const Vector3& start, const Vector3& target)
+std::list<Vector3> tpp::pathfinder::try_straight_path()
 {
 	return {};
 }

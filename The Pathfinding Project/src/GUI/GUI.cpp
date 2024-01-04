@@ -36,32 +36,27 @@ static void gui_draw()
 
 		if (ImGui::InputInt3("Starting Position", start))
 		{
-			tpp::pathfinder::state.start.x = (double)start[0];
-			tpp::pathfinder::state.start.y = (double)start[1];
-			tpp::pathfinder::state.start.z = (double)start[2];
+			tpp::pathfinder::state->start.x = (double)start[0];
+			tpp::pathfinder::state->start.y = (double)start[1];
+			tpp::pathfinder::state->start.z = (double)start[2];
 		}
 		if(ImGui::InputInt3("Target Position", target))
 		{
-			tpp::pathfinder::state.target.x = (double)target[0];
-			tpp::pathfinder::state.target.y = (double)target[1];
-			tpp::pathfinder::state.target.z = (double)target[2];
+			tpp::pathfinder::state->target.x = (double)target[0];
+			tpp::pathfinder::state->target.y = (double)target[1];
+			tpp::pathfinder::state->target.z = (double)target[2];
 		}
 
 		if (ImGui::Checkbox("Set Blocks?", &flags[tpp::makepathflags::SETBLOCK]))
-			tpp::pathfinder::state.flags ^= tpp::makepathflags::SETBLOCK;
+			tpp::pathfinder::state->flags ^= tpp::makepathflags::SETBLOCK;
 		if (ImGui::Checkbox("Safe mode?", &flags[tpp::makepathflags::SAFE]))
-			tpp::pathfinder::state.flags ^= tpp::makepathflags::SAFE;
+			tpp::pathfinder::state->flags ^= tpp::makepathflags::SAFE;
 		if (ImGui::Checkbox("Use previous cache?", &flags[tpp::makepathflags::USEPREVCACHE]))
-			tpp::pathfinder::state.flags ^= tpp::makepathflags::USEPREVCACHE;
+			tpp::pathfinder::state->flags ^= tpp::makepathflags::USEPREVCACHE;
 		//Traverse eventually
 
 		if (ImGui::Button("Run Pathfinder", { 100, 50 }))
-			tpp::pathfinder::make_path(
-				tpp::pathfinder::state.start,
-				tpp::pathfinder::state.target,
-				tpp::pathfinder::state.flags,
-				tpp::pathfinder::state.block_to_set
-			);
+			tpp::pathfinder::state->should_run = true;
 	}
 	ImGui::End();
 

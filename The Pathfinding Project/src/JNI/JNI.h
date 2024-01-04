@@ -230,6 +230,11 @@ namespace tpp::jni
 	template<typename... Ts>
 	jobject new_obj(const std::string& cls, const std::string& ctor, Ts... args)
 	{
+#ifdef _DEBUG
+		std::cout << "[Debug : new_obj] Address of class " + cls + " : " << jni::class_map[cls] << '\n';
+		std::cout << "[Debug : new_obj] Address of constructor " + ctor + " : " << jni::method_map[cls][ctor] << '\n';
+#endif
+
 		return env->NewObject(jni::class_map[cls], jni::method_map[cls][ctor], args...);
 	}
 

@@ -32,18 +32,14 @@ bool instance::initialize()
 
 void instance::run()
 {
-	tpp::jni::debug_dump();
-
-	/*Vector3 target;
-	std::cin >> target.x >> target.y >> target.z;
-	pathfinder::go_to(
-		target, 
-		(int)MakePathFlags::SETBLOCK + (int)MakePathFlags::SAFE,
-		"stone"
-	);*/
-
 	while (!GetAsyncKeyState(VK_NUMPAD0))
 	{
+		if (pathfinder::state->should_run)
+		{
+			pathfinder::make_path();
+			pathfinder::state->should_run = false;
+		}
+
 		std::this_thread::sleep_for(500ms);
 	}
 }

@@ -380,14 +380,14 @@ void tpp::jni::debug_dump()
 {
 	for (const auto& i : jni::class_map)
 	{
-		std::cout << "[C] " << i.first << '\n';
+		std::cout << "[Class] " << i.first << " : " << i.second << '\n';
 	}
 
 	for (const auto& i : jni::field_map)
 	{
 		for (const auto& j : i.second)
 		{
-			std::cout << "[F] " << i.first << " : " << j.first << ' ' << j.second << '\n';
+			std::cout << "[Field] " << i.first << " : " << j.first << ' ' << j.second << '\n';
 		}
 	}
 
@@ -395,7 +395,7 @@ void tpp::jni::debug_dump()
 	{
 		for (const auto& j : i.second)
 		{
-			std::cout << "[M] " << i.first << " : " << j.first << ' ' << j.second << '\n';
+			std::cout << "[Method] " << i.first << " : " << j.first << ' ' << j.second << '\n';
 		}
 	}
 }
