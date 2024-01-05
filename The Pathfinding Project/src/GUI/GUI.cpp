@@ -11,11 +11,24 @@ namespace
 	bool flag_cache[3]{ };
 }
 
+static void gui_helpbox(const char* contents)
+{
+	ImGui::SameLine();
+	ImGui::TextDisabled("(?)");
+	if (ImGui::BeginItemTooltip())
+	{
+		ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.f);
+		ImGui::TextUnformatted(contents);
+		ImGui::PopTextWrapPos();
+		ImGui::EndTooltip();
+	}
+}
+
 static void gui_init()
 {
 	old_context = wglGetCurrentContext();
 
-	gui::context = ImGui::CreateContext();
+	gui::imgui_context = ImGui::CreateContext();
 
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	ImGui::StyleColorsDark();
@@ -47,10 +60,27 @@ static void gui_draw()
 
 		if (ImGui::Checkbox("Set Blocks?", &flag_cache[0]))
 			gui::flags ^= makepathflags::SETBLOCK, gui::pathfinder_state_changed = true;
+		gui_helpbox(
+			"Whether blocks will be placed to show the found path.\n"
+			"Should only be used for single-player testing.\n"
+			"This is currently the only way to see the path."
+		);
+
 		if (ImGui::Checkbox("Safe Mode?", &flag_cache[1]))
 			gui::flags ^= makepathflags::SAFE, gui::pathfinder_state_changed = true;
+		gui_helpbox(
+			"Whether the pathfinder will try to find the first\n"
+			"solid block below the start & target positions.\n"
+			"Can fix some annoying fails and bugs."
+		);
+
 		if (ImGui::Checkbox("Use Previous Cache?", &flag_cache[2]))
 			gui::flags ^= makepathflags::USEPREVCACHE, gui::pathfinder_state_changed = true;
+		gui_helpbox(
+			"If checked, the previous cache of walkable blocks\n"
+			"will not be wiped. Can significantly improve performance\n"
+			"and should be used if blocks don't change."
+		);
 
 		if (ImGui::Button("Run Pathfinder", { 120, 50 }))
 			gui::run = true, gui::pathfinder_state_changed = true;
@@ -68,10 +98,9 @@ void gui::destroy()
 
 	wglMakeCurrent(device_context, new_context);
 
-	should_draw = false;
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplWin32_Shutdown();
-	ImGui::DestroyContext(gui::context);
+	ImGui::DestroyContext(gui::imgui_context);
 	SetWindowLongPtr(hooks::window_handle, GWLP_WNDPROC, (LONG_PTR)hooks::original::WndProc);
 
 	wglMakeCurrent(device_context, new_context);
@@ -98,6 +127,7 @@ BOOL WINAPI hooks::detour::wglSwapBuffers(HDC dc)
 		device_context = dc;
 
 		old_context = wglGetCurrentContext();
+
 		if (new_context) wglDeleteContext(new_context);
 		new_context = wglCreateContext(dc);
 

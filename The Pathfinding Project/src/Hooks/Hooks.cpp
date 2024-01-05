@@ -18,7 +18,7 @@ bool hooks::init()
 		return false;
 	}
 
-#pragma warning( suppress : 6387 )
+#pragma warning( suppress : 6387 ) // Disable warning regarding possible null at GetModuleHandle.
 	original::wglSwapBuffers = (type_wglSwapBuffers)GetProcAddress(GetModuleHandle(L"opengl32.dll"), "wglSwapBuffers");
 	if (original::wglSwapBuffers == nullptr)
 	{

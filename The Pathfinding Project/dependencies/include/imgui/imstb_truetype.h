@@ -3964,12 +3964,12 @@ static void stbrp_pack_rects(stbrp_context *con, stbrp_rect *rects, int num_rect
 
 STBTT_DEF int stbtt_PackBegin(stbtt_pack_context *spc, unsigned char *pixels, int pw, int ph, int stride_in_bytes, int padding, void *alloc_context)
 {
-   stbrp_context *context = (stbrp_context *) STBTT_malloc(sizeof(*context)            ,alloc_context);
+   stbrp_context *imgui_context = (stbrp_context *) STBTT_malloc(sizeof(*imgui_context)            ,alloc_context);
    int            num_nodes = pw - padding;
    stbrp_node    *nodes   = (stbrp_node    *) STBTT_malloc(sizeof(*nodes  ) * num_nodes,alloc_context);
 
-   if (context == NULL || nodes == NULL) {
-      if (context != NULL) STBTT_free(context, alloc_context);
+   if (imgui_context == NULL || nodes == NULL) {
+      if (imgui_context != NULL) STBTT_free(imgui_context, alloc_context);
       if (nodes   != NULL) STBTT_free(nodes  , alloc_context);
       return 0;
    }
@@ -3978,7 +3978,7 @@ STBTT_DEF int stbtt_PackBegin(stbtt_pack_context *spc, unsigned char *pixels, in
    spc->width = pw;
    spc->height = ph;
    spc->pixels = pixels;
-   spc->pack_info = context;
+   spc->pack_info = imgui_context;
    spc->nodes = nodes;
    spc->padding = padding;
    spc->stride_in_bytes = stride_in_bytes != 0 ? stride_in_bytes : pw;
@@ -3986,7 +3986,7 @@ STBTT_DEF int stbtt_PackBegin(stbtt_pack_context *spc, unsigned char *pixels, in
    spc->v_oversample = 1;
    spc->skip_missing = 0;
 
-   stbrp_init_target(context, pw-padding, ph-padding, nodes, num_nodes);
+   stbrp_init_target(imgui_context, pw-padding, ph-padding, nodes, num_nodes);
 
    if (pixels)
       STBTT_memset(pixels, 0, pw*ph); // background of 0 around pixels

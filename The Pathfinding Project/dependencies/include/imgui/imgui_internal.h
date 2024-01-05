@@ -2750,7 +2750,7 @@ struct IMGUI_API ImGuiWindow
     ImRect                  DockTabItemRect;
 
 public:
-    ImGuiWindow(ImGuiContext* context, const char* name);
+    ImGuiWindow(ImGuiContext* imgui_context, const char* name);
     ~ImGuiWindow();
 
     ImGuiID     GetID(const char* str, const char* str_end = NULL);
@@ -3186,9 +3186,9 @@ namespace ImGui
     IMGUI_API void          UpdateMouseMovingWindowEndFrame();
 
     // Generic context hooks
-    IMGUI_API ImGuiID       AddContextHook(ImGuiContext* context, const ImGuiContextHook* hook);
-    IMGUI_API void          RemoveContextHook(ImGuiContext* context, ImGuiID hook_to_remove);
-    IMGUI_API void          CallContextHooks(ImGuiContext* context, ImGuiContextHookType type);
+    IMGUI_API ImGuiID       AddContextHook(ImGuiContext* imgui_context, const ImGuiContextHook* hook);
+    IMGUI_API void          RemoveContextHook(ImGuiContext* imgui_context, ImGuiID hook_to_remove);
+    IMGUI_API void          CallContextHooks(ImGuiContext* imgui_context, ImGuiContextHookType type);
 
     // Viewports
     IMGUI_API void          TranslateWindowsInViewport(ImGuiViewportP* viewport, const ImVec2& old_pos, const ImVec2& new_pos);
