@@ -90,6 +90,8 @@ void tpp::pathfinder::update_state()
 
 	state->flags = gui::flags;
 
+	state->block_to_set = gui::block_to_set;
+
 	if (gui::run)
 	{
 		gui::run = false;

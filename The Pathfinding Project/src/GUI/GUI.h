@@ -15,6 +15,7 @@ namespace tpp::gui
 	inline int start[3]{ }, target[3]{ };
 	inline bool player_pos_start{ false }, player_pos_target{ false };
 	inline int flags{ 0 };
+	inline char block_to_set[256]{ "stone" };
 	inline bool run{ false };
 
 	inline bool pathfinder_state_changed{ false };

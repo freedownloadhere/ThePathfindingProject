@@ -48,16 +48,22 @@ static void gui_draw()
 
 	ImGui::Begin("The Pathfinding Project - FreeDownloadHere");
 	{
+		ImGui::SeparatorText("Start & Target Coordinates");
+		ImGui::PushItemWidth(200.f);
 		gui::pathfinder_state_changed |= ImGui::InputInt3("Start ", gui::start);
+		ImGui::PopItemWidth();
 		ImGui::SameLine();
-		if (ImGui::Button("Your Position 1", { 100, 25 }))
+		if (ImGui::Button("Set To Current 1", { 105, 25 }))
 			gui::player_pos_start = true, gui::pathfinder_state_changed = true;
 
+		ImGui::PushItemWidth(200.f);
 		gui::pathfinder_state_changed |= ImGui::InputInt3("Target", gui::target);
+		ImGui::PopItemWidth();
 		ImGui::SameLine();
-		if (ImGui::Button("Your Position 2", { 100, 25 }))
+		if (ImGui::Button("Set To Current 2", { 105, 25 }))
 			gui::player_pos_target = true, gui::pathfinder_state_changed = true;
 
+		ImGui::SeparatorText("Flags");
 		if (ImGui::Checkbox("Set Blocks?", &flag_cache[0]))
 			gui::flags ^= makepathflags::SETBLOCK, gui::pathfinder_state_changed = true;
 		gui_helpbox(
@@ -82,7 +88,14 @@ static void gui_draw()
 			"and should be used if blocks don't change."
 		);
 
-		if (ImGui::Button("Run Pathfinder", { 120, 50 }))
+		ImGui::SeparatorText("Block To Set");
+		ImGui::PushItemWidth(200.f);
+		gui::pathfinder_state_changed |= ImGui::InputText("", gui::block_to_set, 256i64);
+		ImGui::PopItemWidth();
+		ImGui::TextDisabled("e.g. iron_block, gold_ore...");
+
+		ImGui::SeparatorText("Run & Profiling");
+		if (ImGui::Button("Run Pathfinder", { 350, 25 }))
 			gui::run = true, gui::pathfinder_state_changed = true;
 	}
 	ImGui::End();

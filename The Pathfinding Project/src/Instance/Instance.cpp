@@ -34,18 +34,6 @@ void instance::run()
 {
 	while (!GetAsyncKeyState(VK_NUMPAD0))
 	{
-		// Temporary code
-		/*if (gui::gui_state_changed)
-		{
-			gui::gui_state_changed = false;
-
-			tpp::env->SetBooleanField(
-				jni::object_map["Minecraft"],
-				jni::field_map["Minecraft"]["inGameHasFocus"],
-				(jboolean)gui::should_draw
-			);
-		}*/
-
 		if (gui::pathfinder_state_changed)
 			pathfinder::update_state();
 

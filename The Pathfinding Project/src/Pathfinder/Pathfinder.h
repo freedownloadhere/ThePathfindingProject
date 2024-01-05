@@ -8,7 +8,6 @@
 #include <random>
 #include <thread>
 #include <memory>
-#include <mutex>
 
 #include "../Utils/Timer/Timer.h"
 #include "../Utils/Block/Block.h"
@@ -19,18 +18,15 @@
 
 namespace tpp::pathfinder
 {
-	constexpr int PLAYER_POS = -300000001;
-
 	struct state_struct
 	{
 		Vector3 start{ 0, 0, 0 };
 		Vector3 target{ 0, 0, 0 };
 		int flags{ 0 };
-		std::string block_to_set{ "stone" };
+		std::string block_to_set{ "iron_block" };
 
 		bool should_run{ false };
 	};
-
 	inline std::unique_ptr<state_struct> state;
 
 	bool initialize();
