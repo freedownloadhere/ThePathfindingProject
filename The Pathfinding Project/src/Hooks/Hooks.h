@@ -18,7 +18,7 @@ namespace tpp::hooks
 		inline type_wglSwapBuffers wglSwapBuffers{ nullptr };
 	}
 
-	namespace hooked
+	namespace detour
 	{
 		extern LRESULT WINAPI WndProc(HWND, UINT, WPARAM, LPARAM);
 		extern BOOL WINAPI wglSwapBuffers(HDC);

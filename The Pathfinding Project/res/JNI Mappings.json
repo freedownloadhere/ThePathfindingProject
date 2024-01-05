@@ -27,6 +27,11 @@
                 "name": "objectMouseOver",
                 "obf": "field_71476_x",
                 "sig": "Lnet/minecraft/util/MovingObjectPosition;"
+            },
+            {
+                "name": "inGameHasFocus",
+                "obf": "field_71415_G",
+                "sig": "Z"
             }
         ],
         "methods": []

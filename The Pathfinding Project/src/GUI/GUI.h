@@ -14,13 +14,14 @@ namespace tpp::gui
 {
 	void destroy();
 
+	inline bool should_draw{ false };
 	inline int start[3]{ }, target[3]{ };
 	inline bool player_pos_start{ false }, player_pos_target{ false };
 	inline int flags{ 0 };
 	inline bool run{ false };
 
-	inline bool state_changed{ false };
+	inline bool pathfinder_state_changed{ false };
+	inline bool gui_state_changed{ false };
 
-	inline bool should_draw{ false };
 	inline ImGuiContext* context;
 }

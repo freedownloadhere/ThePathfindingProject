@@ -35,25 +35,25 @@ static void gui_draw()
 
 	ImGui::Begin("The Pathfinding Project - FreeDownloadHere");
 	{
-		gui::state_changed |= ImGui::InputInt3("Start ", gui::start);
+		gui::pathfinder_state_changed |= ImGui::InputInt3("Start ", gui::start);
 		ImGui::SameLine();
 		if (ImGui::Button("Your Position 1", { 100, 25 }))
-			gui::player_pos_start = true, gui::state_changed = true;
+			gui::player_pos_start = true, gui::pathfinder_state_changed = true;
 
-		gui::state_changed |= ImGui::InputInt3("Target", gui::target);
+		gui::pathfinder_state_changed |= ImGui::InputInt3("Target", gui::target);
 		ImGui::SameLine();
 		if (ImGui::Button("Your Position 2", { 100, 25 }))
-			gui::player_pos_target = true, gui::state_changed = true;
+			gui::player_pos_target = true, gui::pathfinder_state_changed = true;
 
 		if (ImGui::Checkbox("Set Blocks?", &flag_cache[0]))
-			gui::flags ^= makepathflags::SETBLOCK, gui::state_changed = true;
+			gui::flags ^= makepathflags::SETBLOCK, gui::pathfinder_state_changed = true;
 		if (ImGui::Checkbox("Safe Mode?", &flag_cache[1]))
-			gui::flags ^= makepathflags::SAFE, gui::state_changed = true;
+			gui::flags ^= makepathflags::SAFE, gui::pathfinder_state_changed = true;
 		if (ImGui::Checkbox("Use Previous Cache?", &flag_cache[2]))
-			gui::flags ^= makepathflags::USEPREVCACHE, gui::state_changed = true;
+			gui::flags ^= makepathflags::USEPREVCACHE, gui::pathfinder_state_changed = true;
 
 		if (ImGui::Button("Run Pathfinder", { 120, 50 }))
-			gui::run = true, gui::state_changed = true;
+			gui::run = true, gui::pathfinder_state_changed = true;
 	}
 	ImGui::End();
 
@@ -80,10 +80,10 @@ void gui::destroy()
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND, UINT, WPARAM, LPARAM);
 
-LRESULT WINAPI hooks::hooked::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+LRESULT WINAPI hooks::detour::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	if (msg == WM_KEYDOWN && wParam == VK_NUMPAD1)
-		gui::should_draw = !gui::should_draw;
+		gui::should_draw = !gui::should_draw, gui::gui_state_changed = true;
 
 	if (gui::should_draw)
 		ImGui_ImplWin32_WndProcHandler(hwnd, msg, wParam, lParam);
@@ -91,11 +91,12 @@ LRESULT WINAPI hooks::hooked::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM
 	return CallWindowProc(original::WndProc, hwnd, msg, wParam, lParam);
 }
 
-BOOL WINAPI hooks::hooked::wglSwapBuffers(HDC dc)
+BOOL WINAPI hooks::detour::wglSwapBuffers(HDC dc)
 {
 	if (!opengl_init)
 	{
 		device_context = dc;
+
 		old_context = wglGetCurrentContext();
 		if (new_context) wglDeleteContext(new_context);
 		new_context = wglCreateContext(dc);

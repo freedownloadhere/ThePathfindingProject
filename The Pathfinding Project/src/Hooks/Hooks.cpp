@@ -1,6 +1,8 @@
 #include "Hooks.h"
 
-bool tpp::hooks::init()
+using namespace tpp;
+
+bool hooks::init()
 {
 	window_handle = FindWindowA("LWJGL", nullptr);
 	if (window_handle == nullptr)
@@ -9,13 +11,14 @@ bool tpp::hooks::init()
 		return false;
 	}
 
-	original::WndProc = (WNDPROC)SetWindowLongPtr(window_handle, GWLP_WNDPROC, (LONG_PTR)hooked::WndProc);
+	original::WndProc = (WNDPROC)SetWindowLongPtr(window_handle, GWLP_WNDPROC, (LONG_PTR)detour::WndProc);
 	if (original::WndProc == nullptr)
 	{
 		std::cerr << "[-] Failed to get the WndProc function.\n";
 		return false;
 	}
 
+#pragma warning( suppress : 6387 )
 	original::wglSwapBuffers = (type_wglSwapBuffers)GetProcAddress(GetModuleHandle(L"opengl32.dll"), "wglSwapBuffers");
 	if (original::wglSwapBuffers == nullptr)
 	{
@@ -24,20 +27,17 @@ bool tpp::hooks::init()
 	}
 
 	MH_Initialize();
-
-	MH_CreateHook(original::wglSwapBuffers, &hooked::wglSwapBuffers, (void**)&original::wglSwapBuffers);
-
+	MH_CreateHook(original::wglSwapBuffers, &detour::wglSwapBuffers, (void**)&original::wglSwapBuffers);
 	MH_EnableHook(MH_ALL_HOOKS);
 
 	return true;
 }
 
-bool tpp::hooks::destroy()
+bool hooks::destroy()
 {
 	SetWindowLongPtr(window_handle, GWLP_WNDPROC, (LONG_PTR)original::WndProc);
 
 	MH_DisableHook(MH_ALL_HOOKS);
-
 	MH_RemoveHook(MH_ALL_HOOKS);
 
 	return true;

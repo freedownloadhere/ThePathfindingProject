@@ -58,7 +58,7 @@ bool tpp::pathfinder::initialize()
 
 void tpp::pathfinder::update_state()
 {
-	gui::state_changed = false;
+	gui::pathfinder_state_changed = false;
 
 	if (gui::player_pos_start || gui::player_pos_target)
 	{
@@ -66,17 +66,17 @@ void tpp::pathfinder::update_state()
 
 		if (gui::player_pos_start)
 		{
-			gui::start[0] = player::below_position.x;
-			gui::start[1] = player::below_position.y;
-			gui::start[2] = player::below_position.z;
+			gui::start[0] = (int)player::below_position.x;
+			gui::start[1] = (int)player::below_position.y;
+			gui::start[2] = (int)player::below_position.z;
 			
 			gui::player_pos_start = false;
 		}
 		if (gui::player_pos_target)
 		{
-			gui::target[0] = player::below_position.x;
-			gui::target[1] = player::below_position.y;
-			gui::target[2] = player::below_position.z;
+			gui::target[0] = (int)player::below_position.x;
+			gui::target[1] = (int)player::below_position.y;
+			gui::target[2] = (int)player::below_position.z;
 
 			gui::player_pos_target = false;
 		}
