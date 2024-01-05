@@ -4,6 +4,11 @@ using namespace tpp;
 
 static nlohmann::json mappings;
 
+/// <summary>
+/// I did not write this!
+/// This was written by Lefradeur over at the Axxo discord.
+/// He's a great guy.
+/// </summary>
 static jclass get_class(const std::string& path)
 {
 	static std::unordered_map<std::string, jclass> classMap;
