@@ -12,5 +12,6 @@
 
 🧰 A GUI window will open up. You can figure it out from there.
 
-![image](https://github.com/freedownloadhere/ThePathfindingProject/assets/111175088/fd1aa293-fe23-4e21-ba78-daaae02c5b50)
+![image](https://github.com/freedownloadhere/ThePathfindingProject/assets/111175088/06e94620-27c9-4c07-aba7-d050b66e4f08)
+
 
