@@ -2,8 +2,6 @@
 
 using namespace tpp;
 
-static Vector3 position{ 0, 0, 0 };
-static ViewAngles viewangles{ 0, 0 };
 static std::string inventory[36] = {};
 static jobjectArray inv_array{ nullptr };
 static INPUT lc_inputs[2], rc_inputs[2];
@@ -36,6 +34,11 @@ void player::update_pos()
 	position.x = jni::get_double("EntityPlayerSP", "posX");
 	position.y = jni::get_double("EntityPlayerSP", "posY");
 	position.z = jni::get_double("EntityPlayerSP", "posZ");
+}
+
+void player::update_below_pos()
+{
+	below_position = get_below_pos();
 }
 
 void player::update_viewangles()

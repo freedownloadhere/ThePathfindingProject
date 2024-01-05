@@ -56,6 +56,47 @@ bool tpp::pathfinder::initialize()
 	return true;
 }
 
+void tpp::pathfinder::update_state()
+{
+	gui::state_changed = false;
+
+	if (gui::player_pos_start || gui::player_pos_target)
+	{
+		player::update_below_pos();
+
+		if (gui::player_pos_start)
+		{
+			gui::start[0] = player::below_position.x;
+			gui::start[1] = player::below_position.y;
+			gui::start[2] = player::below_position.z;
+			
+			gui::player_pos_start = false;
+		}
+		if (gui::player_pos_target)
+		{
+			gui::target[0] = player::below_position.x;
+			gui::target[1] = player::below_position.y;
+			gui::target[2] = player::below_position.z;
+
+			gui::player_pos_target = false;
+		}
+	}
+	state->start.x = (double)gui::start[0];
+	state->start.y = (double)gui::start[1];
+	state->start.z = (double)gui::start[2];
+	state->target.x = (double)gui::target[0];
+	state->target.y = (double)gui::target[1];
+	state->target.z = (double)gui::target[2];
+
+	state->flags = gui::flags;
+
+	if (gui::run)
+	{
+		gui::run = false;
+		make_path();
+	}
+}
+
 bool tpp::pathfinder::list_contains(
 	const AstarVector3& element,
 	const std::vector<AstarVector3>& heap

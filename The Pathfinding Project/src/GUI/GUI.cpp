@@ -1,29 +1,33 @@
 #include "GUI.h"
 
+using namespace tpp;
+
 namespace
 {
 	HDC device_context{ nullptr };
 	HGLRC old_context{ nullptr }, new_context{ nullptr };
 	bool opengl_init{ false };
+
+	bool flag_cache[3]{ };
 }
 
 static void gui_init()
 {
 	old_context = wglGetCurrentContext();
 
-	tpp::gui::context = ImGui::CreateContext();
+	gui::context = ImGui::CreateContext();
 
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	ImGui::StyleColorsDark();
-	ImGui_ImplWin32_Init(tpp::hooks::window_handle);
+	ImGui_ImplWin32_Init(hooks::window_handle);
 	ImGui_ImplOpenGL3_Init();
 
-	tpp::gui::should_draw = true;
+	gui::should_draw = true;
 }
 
 static void gui_draw()
 {
-	if (!tpp::gui::should_draw) return;
+	if (!gui::should_draw) return;
 
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplWin32_NewFrame();
@@ -31,32 +35,25 @@ static void gui_draw()
 
 	ImGui::Begin("The Pathfinding Project - FreeDownloadHere");
 	{
-		static int start[3]{ }, target[3]{ };
-		static bool flags[1 << 3 + 1]{ }; // lazy man's hashmap
+		gui::state_changed |= ImGui::InputInt3("Start ", gui::start);
+		ImGui::SameLine();
+		if (ImGui::Button("Your Position 1", { 100, 25 }))
+			gui::player_pos_start = true, gui::state_changed = true;
 
-		if (ImGui::InputInt3("Starting Position", start))
-		{
-			tpp::pathfinder::state->start.x = (double)start[0];
-			tpp::pathfinder::state->start.y = (double)start[1];
-			tpp::pathfinder::state->start.z = (double)start[2];
-		}
-		if(ImGui::InputInt3("Target Position", target))
-		{
-			tpp::pathfinder::state->target.x = (double)target[0];
-			tpp::pathfinder::state->target.y = (double)target[1];
-			tpp::pathfinder::state->target.z = (double)target[2];
-		}
+		gui::state_changed |= ImGui::InputInt3("Target", gui::target);
+		ImGui::SameLine();
+		if (ImGui::Button("Your Position 2", { 100, 25 }))
+			gui::player_pos_target = true, gui::state_changed = true;
 
-		if (ImGui::Checkbox("Set Blocks?", &flags[tpp::makepathflags::SETBLOCK]))
-			tpp::pathfinder::state->flags ^= tpp::makepathflags::SETBLOCK;
-		if (ImGui::Checkbox("Safe mode?", &flags[tpp::makepathflags::SAFE]))
-			tpp::pathfinder::state->flags ^= tpp::makepathflags::SAFE;
-		if (ImGui::Checkbox("Use previous cache?", &flags[tpp::makepathflags::USEPREVCACHE]))
-			tpp::pathfinder::state->flags ^= tpp::makepathflags::USEPREVCACHE;
-		//Traverse eventually
+		if (ImGui::Checkbox("Set Blocks?", &flag_cache[0]))
+			gui::flags ^= makepathflags::SETBLOCK, gui::state_changed = true;
+		if (ImGui::Checkbox("Safe Mode?", &flag_cache[1]))
+			gui::flags ^= makepathflags::SAFE, gui::state_changed = true;
+		if (ImGui::Checkbox("Use Previous Cache?", &flag_cache[2]))
+			gui::flags ^= makepathflags::USEPREVCACHE, gui::state_changed = true;
 
-		if (ImGui::Button("Run Pathfinder", { 100, 50 }))
-			tpp::pathfinder::state->should_run = true;
+		if (ImGui::Button("Run Pathfinder", { 120, 50 }))
+			gui::run = true, gui::state_changed = true;
 	}
 	ImGui::End();
 
@@ -65,7 +62,7 @@ static void gui_draw()
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-void tpp::gui::destroy()
+void gui::destroy()
 {
 	should_draw = false;
 
@@ -75,7 +72,7 @@ void tpp::gui::destroy()
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext(gui::context);
-	SetWindowLongPtr(tpp::hooks::window_handle, GWLP_WNDPROC, (LONG_PTR)hooks::original::WndProc);
+	SetWindowLongPtr(hooks::window_handle, GWLP_WNDPROC, (LONG_PTR)hooks::original::WndProc);
 
 	wglMakeCurrent(device_context, new_context);
 	wglDeleteContext(new_context);
@@ -83,18 +80,18 @@ void tpp::gui::destroy()
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND, UINT, WPARAM, LPARAM);
 
-LRESULT WINAPI tpp::hooks::hooked::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+LRESULT WINAPI hooks::hooked::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	if (msg == WM_KEYDOWN && wParam == VK_NUMPAD1)
-		tpp::gui::should_draw = !tpp::gui::should_draw;
+		gui::should_draw = !gui::should_draw;
 
-	if (tpp::gui::should_draw)
+	if (gui::should_draw)
 		ImGui_ImplWin32_WndProcHandler(hwnd, msg, wParam, lParam);
 
 	return CallWindowProc(original::WndProc, hwnd, msg, wParam, lParam);
 }
 
-BOOL WINAPI tpp::hooks::hooked::wglSwapBuffers(HDC dc)
+BOOL WINAPI hooks::hooked::wglSwapBuffers(HDC dc)
 {
 	if (!opengl_init)
 	{

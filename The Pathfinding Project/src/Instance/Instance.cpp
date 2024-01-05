@@ -34,11 +34,8 @@ void instance::run()
 {
 	while (!GetAsyncKeyState(VK_NUMPAD0))
 	{
-		if (pathfinder::state->should_run)
-		{
-			pathfinder::make_path();
-			pathfinder::state->should_run = false;
-		}
+		if (gui::state_changed)
+			pathfinder::update_state();
 
 		std::this_thread::sleep_for(500ms);
 	}

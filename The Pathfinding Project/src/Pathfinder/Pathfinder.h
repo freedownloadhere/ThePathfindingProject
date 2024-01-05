@@ -8,15 +8,19 @@
 #include <random>
 #include <thread>
 #include <memory>
+#include <mutex>
 
 #include "../Utils/Timer/Timer.h"
 #include "../Utils/Block/Block.h"
 #include "../Minecraft/Minecraft.h"
 #include "../Vector3/AstarVector3/AstarVector3.h"
 #include "../Utils/Flags/MakePathFlags.h"
+#include "../GUI/GUI.h"
 
 namespace tpp::pathfinder
 {
+	constexpr int PLAYER_POS = -300000001;
+
 	struct state_struct
 	{
 		Vector3 start{ 0, 0, 0 };
@@ -30,8 +34,8 @@ namespace tpp::pathfinder
 	inline std::unique_ptr<state_struct> state;
 
 	bool initialize();
-
 	bool make_path();
+	void update_state();
 
 	std::list<Vector3> try_straight_path();
 	std::list<Vector3> default_astar();
